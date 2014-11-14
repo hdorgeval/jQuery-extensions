@@ -10,6 +10,29 @@
     $.extensions = $.extensions || {};
     $.extensions.trace = trace;
 
+    trace.notImplementedException = function () {
+        this.name = 'notImplementedException';
+        this.message = 'Not Implemented.';
+    };
+    trace.notImplementedException.prototype = new Error();
+    trace.notImplementedException.prototype.constructor = trace.notImplementedException;
+
+    trace.defaultOptions = {
+        sendToRemote: false,
+        remoteUrl: null
+    };
+
+    trace.options = $.extend({}, trace.defaultOptions);
+
+    trace.init = function (options) {
+        /// <signature>
+        /// <summary>Override predefined options to customize the behavior of the trace API.</summary>
+        /// <param name="options" type="Object">Literal object</param>
+        /// <returns type="void"></returns>
+        /// </signature>
+        throw new trace.notImplementedException();
+    };
+
     trace.toSmallDateTime = function ( input ) {
         try {
             /// <signature>
@@ -85,6 +108,11 @@
                 return msg;
             }
 
+            //if there is a name property : should be the type of the exception
+            if (ex.name) {
+                msg += "[" + ex.name + "]";
+            }
+
             // if there is a message property : return only this property
             if ( ex.message ) {
                 msg += ex.message;
@@ -101,6 +129,42 @@
             var msg = "Internal exception : '" + e + "'";
             return msg;
                 
+        }
+    };
+
+    $.initTrace = function (options) {
+        /// <signature>
+        /// <summary>Override predefined options to customize the behavior of the trace API.
+        ///          This method is a shortcut for $.extensions.trace.init(options);
+        ///</summary>
+        /// <param name="options" type="Object">Literal object with the following signature:
+        ///             {
+        ///                sendToRemote: false,
+        ///                remoteUrl: null
+        ///            };
+        ///</param>
+        /// <returns type="void"></returns>
+        /// </signature>
+        throw new trace.notImplementedException();
+    };
+
+    $.logException = function (ex) {
+        /// <signature>
+        /// <summary>Log exception on all configured output devices (Console, Remote Server, custom DOM element, etc ...).
+        ///</summary>
+        /// <param name="ex" type="Object">exception object</param>
+        /// <returns type="String">Returns the string that will be showed in the Console</returns>
+        /// </signature>
+        try {
+
+            trace.logExceptionToConsole(ex);
+
+            //TODO : send exception to remote server
+
+            //TODO : log inside specific DOM element
+
+        } catch (e) {
+            trace.logExceptionToConsole(e);
         }
     };
 
