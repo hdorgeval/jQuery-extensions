@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>jQuery-extensions should not override code in jQuery library</title>
+    <title>Unit tests for jquery-extensions.js</title>
     <meta charset="utf-8">
     <link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-1.15.0.css">
 </head>
@@ -10,7 +10,11 @@
     <div id="qunit-fixture"></div>
     <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
     <script src="http://code.jquery.com/qunit/qunit-1.15.0.js"></script>
-    <script src="../qunit-extensions-0.0.1.js"></script>
-    <script src="unitTest1.js"></script>
+    <script src="qunit-extensions-0.0.1.js"></script>
+    
+    <script src="../../Scripts/jquery-extensions-0.0.5.js"></script>
+
+    <script src="DoNotOverridejQuery/DoNotOverridejQuery.js"></script>
+    <script src="trace.init/trace.init.js"></script>
 </body>
 </html>

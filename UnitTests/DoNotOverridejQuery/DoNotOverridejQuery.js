@@ -4,6 +4,7 @@
 
 
 ( function ( QUnit, undefined ) {
+    var moduleName =  "jquery-extensions.js must not override existing code in jQuery" ;
 
     var getEmptyFrameContentWithJS = function ( jsUrls ) {
         var htmlContent = [];
@@ -22,7 +23,7 @@
         return iframeContent;
     }
 
-    QUnit.isolatedTest("jQuery v1.11.1 object must not have a property called extensions", 
+    QUnit.isolatedTest(moduleName,"jQuery v1.11.1 object must not have a property called extensions", 
                         getEmptyFrameContentWithJS(["http://code.jquery.com/jquery-1.11.1.min.js"]),
                         "jQuery", function (assert,isolatedWindow) {
         //Arrange
@@ -31,7 +32,7 @@
         //Act
         testObject = isolatedWindow.$.extensions;
 
-        //Asert
+        //Assert
         var successMessage = "jQuery library does not contain a property called extensions.";
         var errorMessage = "jQuery library contains a property called extensions.";
         if ( testObject !== undefined && testObject.toString ) {
@@ -45,7 +46,7 @@
 
                         } );
 
-    QUnit.isolatedTest( "jQuery v2.1.1 object must not have a property called extensions",
+    QUnit.isolatedTest(moduleName, "jQuery v2.1.1 object must not have a property called extensions",
                         getEmptyFrameContentWithJS( ["http://code.jquery.com/jquery-2.1.1.min.js"] ),
                         "jQuery", function ( assert, isolatedWindow ) {
         //Arrange
@@ -54,7 +55,7 @@
         //Act
         testObject = isolatedWindow.$.extensions;
 
-        //Asert
+        //Assert
         var successMessage = "jQuery library does not contain a property called extensions.";
         var errorMessage = "jQuery library contains a property called extensions.";
         if ( testObject !== undefined && testObject.toString ) {

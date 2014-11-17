@@ -11,7 +11,7 @@
         return;
     }
 
-    QUnit.isolatedTest = function ( testName, iframeContent, waitForObjectWithName, callback ) {
+    QUnit.isolatedTest = function (moduleName, testName, iframeContent, waitForObjectWithName, callback ) {
         var iframe = document.createElement( 'iframe' );
         iframe.style.position = 'absolute';
         iframe.style.top = '-2000px';
@@ -31,6 +31,11 @@
             clearInterval( interval );
             var expected = null;
             var async = false;
+            
+            if ( moduleName ) {
+                QUnit.module( moduleName );
+            }
+
             QUnit.test( testName, expected, function ( assert ) {
                 callback.call( this, assert, isolatedWin );
             }, async );
