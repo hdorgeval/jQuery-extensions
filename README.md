@@ -67,6 +67,7 @@ jQuery-extensions contains utility methods that are used by the trace API and by
 **$.isNullOrUndefinedOrEmpty( input )**
 
 Check if input object is either null or undefined or empty.
+
 input : Any kind of object : literal object, string, number, boolean, function, etc...
 
 Examples:
