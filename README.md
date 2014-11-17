@@ -59,3 +59,24 @@ trace.logErrorToConsole jquery-extensions.js:169
 $.logError jquery-extensions.js:261
 myFunction trace.init.js:144
 ```
+
+## Core extensions
+
+jQuery-extensions contains utility methods that are used by the trace API and by other extensions. These jQuery basic utilities are the core extensions of this library.
+
+**$.isNullOrUndefinedOrEmpty( input )**
+
+Check if input object is either null or undefined or empty.
+input : Any kind of object : literal object, string, number, boolean, function, etc...
+
+Examples:
+
+```javascript
+$.isNullOrUndefinedOrEmpty(""); //true
+$.isNullOrUndefinedOrEmpty({}); //true
+$.isNullOrUndefinedOrEmpty([]); //true
+$.isNullOrUndefinedOrEmpty(" "); //false
+```
+
+
+
