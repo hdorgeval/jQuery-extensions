@@ -37,6 +37,10 @@
                 return true;
             }
 
+            if (input.window) {
+                return false;
+            }
+
             if ( input.length === 0 ) {
                 return true;
             }
