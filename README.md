@@ -14,7 +14,7 @@ Log exception on all configured output devices (Console, Remote Server).
 
 Example: 
 
-```
+```javascript
 function myFunction () {
     try {
         var test = "";
