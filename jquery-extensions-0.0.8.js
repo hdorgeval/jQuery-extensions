@@ -128,6 +128,48 @@
         };
     }
 
+    $.isString = function (input) {
+        /// <signature>
+        /// <summary>Check if input object is a string.
+        ///</summary>
+        /// <param name="input" type="Object">Any kind of object : literal object, string, number, boolean, function, etc...</param>
+        /// <returns type="Boolean">Returns true if input parameter is a string.</returns>
+        /// </signature>
+        try {
+            if (extensions.isNullOrUndefined(input)) {
+                return false;
+            }
+
+            if (typeof input === "string") {
+                return true;
+            }
+
+            //hack from hdo
+            if (typeof input.isString !== "function") {
+                return false;
+            }
+
+            if (input.isString()) {
+                return true;
+            }
+
+            return false;
+
+        } catch (e) {
+            return false;
+        }
+    };
+
+    $.isNotString = function (input) {
+        /// <signature>
+        /// <summary>Check if input object is not a string.
+        ///</summary>
+        /// <param name="input" type="Object">Any kind of object : literal object, string, number, boolean, function, etc...</param>
+        /// <returns type="Boolean">Returns true if input parameter is not a string.</returns>
+        /// </signature>
+        return $.isString( input ) === false;
+    };
+
     extensions.getQueryStringData = function (url) {
         /// <signature>
         /// <summary>Get the query string as a literal object.

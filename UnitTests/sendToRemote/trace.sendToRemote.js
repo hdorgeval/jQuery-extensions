@@ -1,6 +1,6 @@
 ﻿/// <reference path="../../Scripts/qunit-1.15.0.js" />
 /// <reference path="../../Scripts/jquery-1.11.0.js" />
-/// <reference path="../../Scripts/jquery-extensions-0.0.7.js" />
+/// <reference path="../../Scripts/jquery-extensions-0.0.8.js" />
 
 
 

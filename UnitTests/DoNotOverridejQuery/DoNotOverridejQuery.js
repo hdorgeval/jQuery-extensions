@@ -84,7 +84,7 @@
 
                             //Assert
                             var successMessage = "jQuery library does not contain $.isNullOrUndefinedOrEmpty()";
-                            var errorMessage = "jQuery library contains contain $.isNullOrUndefinedOrEmpty()";
+                            var errorMessage = "jQuery library contains $.isNullOrUndefinedOrEmpty()";
                             if ( testObject !== undefined && testObject.toString ) {
                                 errorMessage += " jQuery.isNullOrUndefinedOrEmpty = '" + testObject.toString() + "'";
                             }
@@ -109,7 +109,7 @@
 
                             //Assert
                             var successMessage = "jQuery library does not contain $.isNullOrUndefinedOrEmpty()";
-                            var errorMessage = "jQuery library contains contain $.isNullOrUndefinedOrEmpty()";
+                            var errorMessage = "jQuery library contains $.isNullOrUndefinedOrEmpty()";
                             if ( testObject !== undefined && testObject.toString ) {
                                 errorMessage += " jQuery.isNullOrUndefinedOrEmpty = '" + testObject.toString() + "'";
                             }
@@ -134,7 +134,7 @@
 
                            //Assert
                            var successMessage = "jQuery library does not contain $.getQueryStringData()";
-                           var errorMessage = "jQuery library contains contain $.getQueryStringData()";
+                           var errorMessage = "jQuery library contains $.getQueryStringData()";
                            if ( testObject !== undefined && testObject.toString ) {
                                errorMessage += " jQuery.getQueryStringData = '" + testObject.toString() + "'";
                            }
@@ -159,7 +159,7 @@
 
                             //Assert
                             var successMessage = "jQuery library does not contain $.getQueryStringData()";
-                            var errorMessage = "jQuery library contains contain $.getQueryStringData()";
+                            var errorMessage = "jQuery library contains $.getQueryStringData()";
                             if ( testObject !== undefined && testObject.toString ) {
                                 errorMessage += " jQuery.getQueryStringData = '" + testObject.toString() + "'";
                             }
@@ -172,6 +172,104 @@
                         } );
 
 
+
+    QUnit.isolatedTest(moduleName, "jQuery v1.11.1 object must not have a method called $.isString()",
+                       getEmptyFrameContentWithJS(["http://code.jquery.com/jquery-1.11.1.min.js"]),
+                       "jQuery", function (assert, isolatedWindow) {
+                           //Arrange
+                           var testObject;
+
+                           //Act
+                           testObject = isolatedWindow.$.isString;
+
+                           //Assert
+                           var successMessage = "jQuery library does not contain $.isString()";
+                           var errorMessage = "jQuery library contains $.isString()";
+                           if (testObject !== undefined && testObject.toString) {
+                               errorMessage += " jQuery.isString = '" + testObject.toString() + "'";
+                           }
+                           var msg = successMessage;
+                           if (testObject !== undefined) {
+                               msg = errorMessage;
+                           }
+                           assert.deepEqual(testObject, undefined, msg);
+
+                       });
+
+
+
+    QUnit.isolatedTest(moduleName, "jQuery v2.1.1 object must not have a method called $.isString()",
+                        getEmptyFrameContentWithJS(["http://code.jquery.com/jquery-2.1.1.min.js"]),
+                        "jQuery", function (assert, isolatedWindow) {
+                            //Arrange
+                            var testObject;
+
+                            //Act
+                            testObject = isolatedWindow.$.isString;
+
+                            //Assert
+                            var successMessage = "jQuery library does not contain $.isString()";
+                            var errorMessage = "jQuery library contains $.isString()";
+                            if (testObject !== undefined && testObject.toString) {
+                                errorMessage += " jQuery.isString = '" + testObject.toString() + "'";
+                            }
+                            var msg = successMessage;
+                            if (testObject !== undefined) {
+                                msg = errorMessage;
+                            }
+                            assert.deepEqual(testObject, undefined, msg);
+
+                        });
+
+
+
+    QUnit.isolatedTest(moduleName, "jQuery v1.11.1 object must not have a method called $.isNotString()",
+                      getEmptyFrameContentWithJS(["http://code.jquery.com/jquery-1.11.1.min.js"]),
+                      "jQuery", function (assert, isolatedWindow) {
+                          //Arrange
+                          var testObject;
+
+                          //Act
+                          testObject = isolatedWindow.$.isNotString;
+
+                          //Assert
+                          var successMessage = "jQuery library does not contain $.isNotString()";
+                          var errorMessage = "jQuery library contains $.isNotString()";
+                          if (testObject !== undefined && testObject.toString) {
+                              errorMessage += " jQuery.isNotString = '" + testObject.toString() + "'";
+                          }
+                          var msg = successMessage;
+                          if (testObject !== undefined) {
+                              msg = errorMessage;
+                          }
+                          assert.deepEqual(testObject, undefined, msg);
+
+                      });
+
+
+
+    QUnit.isolatedTest(moduleName, "jQuery v2.1.1 object must not have a method called $.isNotString()",
+                        getEmptyFrameContentWithJS(["http://code.jquery.com/jquery-2.1.1.min.js"]),
+                        "jQuery", function (assert, isolatedWindow) {
+                            //Arrange
+                            var testObject;
+
+                            //Act
+                            testObject = isolatedWindow.$.isNotString;
+
+                            //Assert
+                            var successMessage = "jQuery library does not contain $.isNotString()";
+                            var errorMessage = "jQuery library contains $.isNotString()";
+                            if (testObject !== undefined && testObject.toString) {
+                                errorMessage += " jQuery.isNotString = '" + testObject.toString() + "'";
+                            }
+                            var msg = successMessage;
+                            if (testObject !== undefined) {
+                                msg = errorMessage;
+                            }
+                            assert.deepEqual(testObject, undefined, msg);
+
+                        });
 
 
 } )( QUnit );
