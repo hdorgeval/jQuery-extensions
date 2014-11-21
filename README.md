@@ -60,13 +60,41 @@ $.logError jquery-extensions.js:261
 myFunction trace.init.js:144
 ```
 
+
+
+**$.initTrace( options )**
+
+Initialize and Configure the trace API.
+
+options : literal object containing general settings of the trace API. The default options are :
+
+```javascript
+options = {
+        sendToRemote: false,
+        remoteUrl: null,
+        interceptAjaxErrors: false
+    }
+```
+
+Example:
+
+```javascript
+$.initTrace ({
+        sendToRemote: true,
+        remoteUrl: 'http://contoso.com/api/log',
+        interceptAjaxErrors: true
+    }
+```
+
 ## Core extensions
 
 jQuery-extensions contains utility methods that are used by the trace API and by other extensions. These jQuery basic utilities are the core extensions of this library.
 
 **$.isNullOrUndefinedOrEmpty( input )**
 
-Check if input object is either null or undefined or empty.
+**$.isNotNullOrUndefinedOrEmpty( input )**
+
+Check if input object is (or is not) either null or undefined or empty.
 
 input : Any kind of object : literal object, string, number, boolean, function, etc...
 
@@ -79,5 +107,18 @@ $.isNullOrUndefinedOrEmpty([]); //true
 $.isNullOrUndefinedOrEmpty(" "); //false
 ```
 
+**$.getQueryStringData( )**
+
+Get the query string of the current web page url as a literal object.
 
 
+**$.getQueryStringData( url )**
+
+Get the query string from input url as a literal object.
+
+Example:
+
+```javascript
+$.getQueryStringData("http://contoso.com?a=1&b=2"); 
+// will output { a:1, b:2 }
+```
