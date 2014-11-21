@@ -124,3 +124,20 @@ Example:
 $.getQueryStringData("http://contoso.com?a=1&b=2"); 
 // will output { a:1, b:2 }
 ```
+
+
+## Non-Chained extensions
+
+jQuery-extensions contains jQuery methods that enables to get non-jQuery data from the jQuery object. Hence these methods cannot be chained with standard jQuery methods.
+
+**.found()**
+
+Check if the element has been found in the DOM.
+
+Example:
+
+```javascript
+var jqElement = $(selector); 
+if ( jqElement.found() ) { ... }
+```
+
