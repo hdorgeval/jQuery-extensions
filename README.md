@@ -6,7 +6,9 @@ Set of extension methods for jQuery.
 ## trace/log API
 
 
-jQuery-extensions contains a trace API that enables logging of Application errors and Exceptions to the Console Window and to a Remote Server. By default logging is done only in the Console Window.
+jQuery-extensions contains a trace API that enables logging of Application errors and Exceptions to the Console Window and to a Remote Server. 
+
+By default logging is done only in the Console Window. To send JavaScript exceptions and application errors to a remote server you must call the $.initTrace(options) method (see below).
 
 **$.logException( ex )**
 
@@ -83,7 +85,7 @@ $.initTrace ({
         sendToRemote: true,
         remoteUrl: 'http://contoso.com/api/log',
         interceptAjaxErrors: true
-    }
+    });
 ```
 
 ## Core extensions
