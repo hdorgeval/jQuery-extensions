@@ -141,3 +141,21 @@ var jqElement = $(selector);
 if ( jqElement.found() ) { ... }
 ```
 
+**.notFound()**
+
+Check if the element has not been found in the DOM.
+
+Example:
+
+```javascript
+var jqElement = $('#not-existing-element'); 
+if ( jqElement.notFound() ) { 
+    //use trace API to let the developer know there is a regression or that page content is not correct  
+    $.logError( {
+                message: "Cannot find element with selector : '#not-existing-element'",
+                info: "Check that HTML content is correctly setup.",
+                otherInfo: "Check data tags are correctly setup on element #not-existing-element"
+            } );
+    }
+```
+
