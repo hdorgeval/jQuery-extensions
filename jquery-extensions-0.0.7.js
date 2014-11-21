@@ -595,7 +595,8 @@
         /// <param name="options" type="Object">Literal object with the following signature:
         ///             {
         ///                sendToRemote: false,
-        ///                remoteUrl: null
+        ///                remoteUrl: null,
+        ///                interceptAjaxErrors
         ///            };
         ///</param>
         /// <returns type="void"></returns>
@@ -662,15 +663,14 @@
 
 //non-chained extensions
 ( function ( $, undefined ) {
-    var extensions = $.extensions;
-
+    
     $.fn.extend( {
         found: function () {
             /// <signature>
             /// <summary>Check if the element has been found in the DOM. 
             ///     typical usage : var jqElement = $(selector); if ( jqElement.found() ) { ... }
             ///</summary>
-            /// <returns type="void"></returns>
+            /// <returns type="Boolean">Returns true if the element has been found in the DOM.</returns>
             /// </signature>
             try {
                 if ( this === null ) {
@@ -696,7 +696,41 @@
                 return false;
             }
         }
-    } );
+    });
+
+    $.fn.extend({
+        notFound: function () {
+            /// <signature>
+            /// <summary>Check if the element has not been found in the DOM. 
+            ///     typical usage : var jqElement = $(selector); if ( jqElement.notFound() ) { ... }
+            ///</summary>
+            /// <returns type="Boolean">Returns true if the element has not been found in the DOM.</returns>
+            /// </signature>
+            try {
+                if (this === null) {
+                    return true;
+                }
+
+                if (this === undefined) {
+                    return true;
+                }
+
+                if (this.length === undefined) {
+                    return true;
+                }
+
+                if (this.length === 0) {
+                    return true;
+                }
+
+                return false;
+
+            } catch (e) {
+                $.logException(e);
+                return false;
+            }
+        }
+    });
 
 } )( jQuery );
 //end non-chained extensions
