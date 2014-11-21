@@ -121,12 +121,29 @@
         }
     };
 
-    //String extension
+    //Core String extensions
     if ( "test".isString === undefined ) {
         String.prototype.isString = function () {
             return true;
         };
     }
+
+    if ("test".trim === undefined) {
+        String.prototype.trim = function () {
+            try {
+                var s = this + '';
+                s = s.replace(/^\s+|\s+$/g, '');
+                s = s.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
+                s = s.replace(/(^(\&nbsp\;)+)|((\&nbsp\;)+$)/g, '');
+                s = s.replace(/(^(\&#160\;)+)|((\&#160\;)+$)/g, '');
+                return s;
+
+            } catch (e) {
+                return this;
+            }
+        };
+    }
+    //end Core string extensions
 
     $.isString = function (input) {
         /// <signature>
@@ -169,6 +186,18 @@
         /// </signature>
         return $.isString( input ) === false;
     };
+
+    $.isNotFunction = function (input) {
+        /// <signature>
+        /// <summary>Check if input object is not a function.
+        ///</summary>
+        /// <param name="input" type="Object">Any kind of object : literal object, string, number, boolean, function, etc...</param>
+        /// <returns type="Boolean">Returns true if input parameter is not a function.</returns>
+        /// </signature>
+        return $.isFunction(input) === false;
+    };
+
+
 
     extensions.getQueryStringData = function (url) {
         /// <signature>
