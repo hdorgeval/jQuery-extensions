@@ -109,6 +109,23 @@ $.isNullOrUndefinedOrEmpty([]); //true
 $.isNullOrUndefinedOrEmpty(" "); //false
 ```
 
+
+**$.isString( input )**
+
+**$.isNotString( input )**
+
+Check if input object is (or is not) a string.
+
+input : Any kind of object : literal object, string, number, boolean, function, etc...
+
+Examples:
+
+```javascript
+$.isString(""); //true
+$.isString(function(){}); //false
+```
+
+
 **$.getQueryStringData( )**
 
 Get the query string of the current web page url as a literal object.
