@@ -126,6 +126,21 @@ $.isString(function(){}); //false
 ```
 
 
+**$.isNotFunction( input )**
+
+Check if input object is not a function.
+
+input : Any kind of object : literal object, string, number, boolean, function, etc...
+
+Examples:
+
+```javascript
+$.isNotFunction(""); //true
+$.isNotFunction(function(){}); //false
+$.isNotFunction(function(){} + ''); //true
+```
+
+
 **$.getQueryStringData( )**
 
 Get the query string of the current web page url as a literal object.
