@@ -86,8 +86,8 @@
         }
     };
 
-    extensions.isNotNullOrUndefinedOrEmpty = function () {
-        return extensions.isNullOrUndefinedOrEmpty() === false;
+    extensions.isNotNullOrUndefinedOrEmpty = function ( input ) {
+        return extensions.isNullOrUndefinedOrEmpty( input ) === false;
     };
 
     $.isNullOrUndefinedOrEmpty = function ( input ) {
@@ -127,9 +127,90 @@
             return true;
         };
     }
-    
 
-})(jQuery);
+    extensions.getQueryStringData = function (url) {
+        /// <signature>
+        /// <summary>Get the query string as a literal object.
+        ///</summary>
+        /// <param name="url" type="String">url from which to extract the query string. 
+        ///             If this parameter is missing current page url is taken.
+        /// </param>
+        /// <returns type="Object">Returns a literal object from the Query String analysis.
+        ///         if an error occurs, the returned object is extended 
+        ///         with a property called lastError that contains the error details.
+        ///</returns>
+        /// </signature>
+        try {
+            var queryString = document.location.search.substr( 1 );
+            if ( url !== undefined ) {
+                var parts = url.split( '?' );
+                if ( parts && parts.length === 2 ) {
+                    queryString = parts[1];
+                }
+            }
+
+            if ( $.isNullOrUndefinedOrEmpty( queryString ) ) {
+                return {};
+            }
+
+            var data = {};
+            
+            $.each( queryString.split( '&' ), function ( c, q ) {
+                try {
+
+                    var query = q.split( '=' );
+                    var key = query[0].toString();
+                    if ( $.isNullOrUndefinedOrEmpty( key ) ) {
+                        key = q;
+                    }
+                    var value = '';
+
+                    if ( query[1] ) {
+                        value = query[1].toString();
+                    }
+
+                    value = value.replace( /\+/g, " " );
+                    value = decodeURIComponent( value );
+
+                    data[key] = value;
+
+
+                } catch ( e ) {
+                    data.lastError = e + '';
+                }
+            } );
+
+            return data;
+
+        } catch ( e ) {
+
+            return { lastError : e + ''};
+        }
+    };
+
+    $.getQueryStringData = function ( url ) {
+        /// <signature>
+        /// <summary>Get the query string as a literal object.
+        ///</summary>
+        /// <param name="url" type="String">url from which to extract the query string. 
+        ///             If this parameter is missing current page url is taken.
+        /// </param>
+        /// <returns type="Object">Returns a literal object from the Query String analysis.
+        ///         if an error occurs, the returned object is extended 
+        ///         with a property called lastError that contains the error details.
+        ///</returns>
+        /// </signature>
+        try {
+            var result = extensions.getQueryStringData( url);
+            return result;
+
+        } catch ( e ) {
+            return { lastError: e + '' };
+        }
+    };
+
+} )( jQuery );
+// end core extensions
 
 //trace API
 (function ($, undefined) {
@@ -147,7 +228,8 @@
 
     trace.defaultOptions = {
         sendToRemote: false,
-        remoteUrl: null
+        remoteUrl: null,
+        interceptAjaxErrors: false
     };
 
     trace.options = $.extend({}, trace.defaultOptions);
@@ -160,6 +242,31 @@
         /// </signature>
 
         trace.options = $.extend( {}, trace.defaultOptions,options );
+
+        if ( trace.options.interceptAjaxErrors === true ) {
+            $.ajaxSetup( {
+                error: function ( xhr, statusMessage, errorMessage ) {
+                    try {
+                        if ( trace.logAjaxError ) {
+                            trace.logAjaxError( xhr, statusMessage, errorMessage );
+                        }
+                    } catch ( e ) {
+                        $.logException( e );
+                    }
+                    
+                },
+                beforeSend: function ( xhr, settings ) {
+                    try {
+                        //inject custom property in the xhr object the request Url
+                        //for logging purpose in case response code != 200
+                        xhr.requestURL = settings.url;
+                    } catch ( e ) {
+                        $.logException( e );
+                    }
+
+                }
+            } );
+        }
 
         //throw new trace.notImplementedException();
     };
@@ -319,16 +426,30 @@
         return trace.remoteLoggingIsEnabled() === false;
     };
 
-    trace.sendExceptionToRemote = function ( ex ) {
+    trace.sendToRemote = function ( options ) {
         /// <signature>
-        /// <summary>Log the input exception object to a remote server. 
-        ///          Remote server Url is defined in $.extensions.trace.options.remoteUrl property</summary>
-        /// <param name="ex" type="Object">Exception object coming from the catch bloc. </param>
+        /// <summary>Send a custom object to a remote server. 
+        ///          Remote server Url is defined in $.extensions.trace.options.remoteUrl property
+        /// </summary>
+        /// <param name="options" type="Object">Literal object that handles all info to send data to the remote server.
+        ///             This literal object has the following signature :
+        ///              {
+        ///                  key , -> name of the key to insert in the query string
+        ///                  value  -> custom object to send to the server
+        ///              }
+        /// </param>
         /// <returns type="String">Returns the string that will be sent to the remote server</returns>
         /// </signature>
         try {
             //check if sending messages to remote server is enabled
             if ( trace.remoteLoggingIsNotEnabled() ) {
+                return "";
+            }
+
+            if ( $.isNullOrUndefinedOrEmpty( options ) ) {
+                trace.logErrorToConsole( {
+                    message: "The options parameter is not defined. Errors cannot be sent to remote server."
+                } );
                 return "";
             }
 
@@ -342,17 +463,130 @@
                 return "";
             }
 
-            var content = JSON.stringify( ex );
+            //build the request url
             var requestUrl = remoteUrl;
-            requestUrl += '?ex=' + encodeURIComponent( content );
+
+            var data = $.getQueryStringData( remoteUrl );
+            if ( $.isNotNullOrUndefinedOrEmpty(data) ) {
+                requestUrl = remoteUrl.split( '?' )[0];
+            }
+
+            var content = JSON.stringify( options.value );
+            data[options.key] = content;
+
+            requestUrl += '?';
+
+            var isFirstParameter = true;
+            for ( var p in data ) {
+                if (isFirstParameter === false) {
+                    requestUrl += '&';
+                }
+                
+                requestUrl += p + '=' + encodeURIComponent( data[p] );
+                isFirstParameter = false;
+            }
+
             var img = new Image();
             img.src = requestUrl;
+
+            return requestUrl;
 
         } catch ( e ) {
             trace.logExceptionToConsole( e );
         }
     };
 
+    trace.httpStatusInfoForCode = function ( statusCode ) {
+        try {
+            if ( $.isNullOrUndefinedOrEmpty(statusCode) ) {
+                return "";
+            }
+
+            var statusErrorMap = {
+                0: "Cross Domain call is rejected by the browser (see CORS configuration)",
+                400: "Server understood the request but request content was invalid.",
+                401: "Unauthorised access.",
+                403: "Forbidden resouce can't be accessed",
+                404: "The url used is not recognized by the server. Please check Url",
+                500: "Internal Server Error.",
+                503: "Service Unavailable"
+            };
+            var message = "Http status code : " + statusCode + "; ";
+            if ( statusCode in statusErrorMap ) {
+                message += statusErrorMap[statusCode];
+            }
+            return message;
+
+        } catch ( e ) {
+            return e + '';
+        }
+    };
+
+    trace.logAjaxErrorToConsole = function ( xhr, statusMessage, errorMessage ) {
+        /// <signature>
+        /// <summary>Log Ajax error on Console</summary>
+        /// <param name="xhr" type="Object">XMLHttpRequest used for the Ajax call.</param>
+        /// <param name="statusMessage" type="String">Status message sent back by jQuery</param>
+        /// <param name="errorMessage" type="String">Error message sent back by jQuery</param>
+        /// <returns type="String">Returns the string that will be showed in the Console</returns>
+        /// </signature>
+        try {
+
+            var err = $.extend( {}, xhr, { statusMessage: statusMessage, errorMessage: errorMessage } );
+
+            err.httpStatusCodeInfo = trace.httpStatusInfoForCode( xhr.status );
+            var msg = trace.logErrorToConsole( err );
+            return msg;
+
+        } catch ( e ) {
+            return trace.logExceptionToConsole( e );
+        }
+
+    };
+
+    trace.logAjaxErrorToRemote = function ( xhr, statusMessage, errorMessage ) {
+        /// <signature>
+        /// <summary>Log Ajax error on Remote</summary>
+        /// <param name="xhr" type="Object">XMLHttpRequest used for the Ajax call.</param>
+        /// <param name="statusMessage" type="String">Status message sent back by jQuery</param>
+        /// <param name="errorMessage" type="String">Error message sent back by jQuery</param>
+        /// <returns type="String">Returns the string that will be showed in the Console</returns>
+        /// </signature>
+        try {
+
+            var err = $.extend( {}, xhr, { statusMessage: statusMessage, errorMessage: errorMessage } );
+
+            err.httpStatusCodeInfo = trace.httpStatusInfoForCode( xhr.status );
+
+            var msg = trace.sendToRemote( { key: 'ajaxErr', value : err } );
+            return msg;
+
+        } catch ( e ) {
+            return trace.logExceptionToConsole( e );
+        }
+
+    };
+
+    trace.logAjaxError = function ( xhr, statusMessage, errorMessage ) {
+        /// <signature>
+        /// <summary>Log Ajax error on all configured output devices (Console, Remote Server, custom DOM element, etc ...).
+        /// <param name="xhr" type="Object">XMLHttpRequest used for the Ajax call.</param>
+        /// <param name="statusMessage" type="String">Status message sent back by jQuery</param>
+        /// <param name="errorMessage" type="String">Error message sent back by jQuery</param>
+        /// <returns type="void"></returns>
+        /// </signature>
+        try {
+
+            trace.logAjaxErrorToConsole( xhr, statusMessage, errorMessage );
+            trace.logAjaxErrorToRemote( xhr, statusMessage, errorMessage );
+
+        } catch ( e ) {
+            trace.logExceptionToConsole( e );
+        }
+
+    };
+
+    //public interface on the jQuery lib
     $.initTrace = function (options) {
         /// <signature>
         /// <summary>Override predefined options to customize the behavior of the trace API.
@@ -366,7 +600,7 @@
         ///</param>
         /// <returns type="void"></returns>
         /// </signature>
-        throw new trace.notImplementedException();
+        trace.init( options );
     };
 
     $.logException = function (ex) {
@@ -380,7 +614,7 @@
 
             trace.logExceptionToConsole(ex);
 
-            //TODO : send exception to remote server
+            trace.sendToRemote( { key: 'ex', value: ex } );
 
             //TODO : log inside specific DOM element
 
@@ -412,7 +646,7 @@
 
             trace.logErrorToConsole( err );
 
-            //TODO : remote logging
+            trace.sendToRemote( { key: 'err', value: err } );
 
             //TODO : log inside specific DOM element
 
@@ -422,6 +656,47 @@
     };
 
 
-    
+} )( jQuery );
+//end trace API
 
-})(jQuery);
+
+//non-chained extensions
+( function ( $, undefined ) {
+    var extensions = $.extensions;
+
+    $.fn.extend( {
+        found: function () {
+            /// <signature>
+            /// <summary>Check if the element has been found in the DOM. 
+            ///     typical usage : var jqElement = $(selector); if ( jqElement.found() ) { ... }
+            ///</summary>
+            /// <returns type="void"></returns>
+            /// </signature>
+            try {
+                if ( this === null ) {
+                    return false;
+                }
+
+                if ( this === undefined ) {
+                    return false;
+                }
+
+                if ( this.length === undefined ) {
+                    return false;
+                }
+
+                if ( this.length === 0 ) {
+                    return false;
+                }
+
+                return true;
+
+            } catch ( e ) {
+                $.logException( e );
+                return false;
+            }
+        }
+    } );
+
+} )( jQuery );
+//end non-chained extensions
