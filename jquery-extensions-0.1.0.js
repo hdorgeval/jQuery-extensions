@@ -177,7 +177,7 @@
         }
     };
 
-    $.isNotString = function (input) {
+    $.isNotString = function ( input ) {
         /// <signature>
         /// <summary>Check if input object is not a string.
         ///</summary>
@@ -187,7 +187,7 @@
         return $.isString( input ) === false;
     };
 
-    $.isNotFunction = function (input) {
+    $.isNotFunction = function ( input ) {
         /// <signature>
         /// <summary>Check if input object is not a function.
         ///</summary>
@@ -197,7 +197,46 @@
         return $.isFunction(input) === false;
     };
 
+    $.isNumber = function (input) {
+        /// <signature>
+        /// <summary>Check if input object is a number.
+        ///</summary>
+        /// <param name="input" type="Object">Any kind of object : literal object, string, number, boolean, function, etc...</param>
+        /// <returns type="Boolean">Returns true if input parameter is a number.</returns>
+        /// </signature>
+        try {
+            if (extensions.isNullOrUndefined(input)) {
+                return false;
+            }
 
+            if (isNaN(input)) {
+                return false;
+            }
+
+            if (typeof input === "number") {
+                return true;
+            }
+
+            if ($.isNotString(input)) {
+                return false;
+            }
+
+            // at this step we know that input is a string
+            // try to convert to float
+            var numberValue = parseFloat( input );
+
+            if (isNaN(numberValue)) {
+                return false;
+            }
+
+            return true;
+
+        } catch (e) {
+            return false;
+        }
+    };
+
+    
 
     extensions.getQueryStringData = function (url) {
         /// <signature>
@@ -730,6 +769,72 @@
 
 } )( jQuery );
 //end trace API
+
+
+
+
+//async extensions
+(function ($, undefined) {
+    $.extensions = $.extensions || {};
+    var extensions = $.extensions;
+
+    var asyncKeys = {};
+
+    $.executeAsync = function ( context, f, delay, asyncKey ) {
+        /// <signature>
+        /// <summary>Execute asynchrounously input function f.
+        ///</summary>
+        /// <param name="context" type="Object">Object that will be used to set the this keyword for method f.</param>
+        /// <param name="f" type="Function">Function that will be called asynchronously.</param>
+        /// <param name="delay" type="Number">Number of milliseconds to wait before calling the function f.</param>
+        /// <param name="asyncKey" type="String">A key that is used to debounce the call of the function f</param>
+        /// <returns type="void"></returns>
+        /// </signature>
+        try {
+            if ( extensions.isNullOrUndefined( context ) ) {
+                context = this;
+            }
+
+            if ( $.isNotFunction( f ) ) {
+                $.logError( {
+                    functionName: "executeAsync",
+                    message: "Input handler is not a function : '" + f + "'"
+                } );
+                return;
+            }
+
+            var defaultDelay = 0;
+            if ( $.isNumber( delay ) ) {
+                defaultDelay = delay;
+            }
+
+            if ( extensions.isNullOrUndefinedOrEmpty( asyncKey ) ) {
+
+                setTimeout( function () {
+                    f.call( context );
+                }, defaultDelay );
+
+                return;
+            }
+
+            //debounce
+            if ( asyncKeys[asyncKey] ) {
+                clearTimeout( asyncKeys[asyncKey] );
+            }
+
+            asyncKeys[asyncKey] = setTimeout( function () {
+                f.call( context );
+            }, defaultDelay );
+
+        } catch ( e ) {
+            $.logException( e );
+            setTimeout( f, 0 );
+        }
+    };
+    
+
+})(jQuery);
+// end async extensions
 
 
 //non-chained extensions

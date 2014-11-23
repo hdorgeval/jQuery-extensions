@@ -318,7 +318,101 @@
                             }
                             assert.deepEqual(testObject, undefined, msg);
 
-                        });
+                        } );
+
+
+    QUnit.isolatedTest( moduleName, "jQuery v1.11.1 object must not have a method called $.isNumber()",
+                   getEmptyFrameContentWithJS( ["http://code.jquery.com/jquery-1.11.1.min.js"] ),
+                   "jQuery", function ( assert, isolatedWindow ) {
+                       //Arrange
+                       var testObject;
+
+                       //Act
+                       testObject = isolatedWindow.$.isNumber;
+
+                       //Assert
+                       var successMessage = "jQuery library does not contain $.isNumber()";
+                       var errorMessage = "jQuery library contains $.isNumber()";
+                       if ( testObject !== undefined && testObject.toString ) {
+                           errorMessage += " jQuery.isNumber = '" + testObject.toString() + "'";
+                       }
+                       var msg = successMessage;
+                       if ( testObject !== undefined ) {
+                           msg = errorMessage;
+                       }
+                       assert.deepEqual( testObject, undefined, msg );
+
+                   } );
+
+    QUnit.isolatedTest( moduleName, "jQuery v2.1.1 object must not have a method called $.isNumber()",
+                        getEmptyFrameContentWithJS( ["http://code.jquery.com/jquery-2.1.1.min.js"] ),
+                        "jQuery", function ( assert, isolatedWindow ) {
+                            //Arrange
+                            var testObject;
+
+                            //Act
+                            testObject = isolatedWindow.$.isNumber;
+
+                            //Assert
+                            var successMessage = "jQuery library does not contain $.isNumber()";
+                            var errorMessage = "jQuery library contains $.isNumber()";
+                            if ( testObject !== undefined && testObject.toString ) {
+                                errorMessage += " jQuery.isNumber = '" + testObject.toString() + "'";
+                            }
+                            var msg = successMessage;
+                            if ( testObject !== undefined ) {
+                                msg = errorMessage;
+                            }
+                            assert.deepEqual( testObject, undefined, msg );
+
+                        } );
+
+
+    QUnit.isolatedTest( moduleName, "jQuery v1.11.1 object must not have a method called $.executeAsync()",
+                   getEmptyFrameContentWithJS( ["http://code.jquery.com/jquery-1.11.1.min.js"] ),
+                   "jQuery", function ( assert, isolatedWindow ) {
+                       //Arrange
+                       var testObject;
+
+                       //Act
+                       testObject = isolatedWindow.$.executeAsync;
+
+                       //Assert
+                       var successMessage = "jQuery library does not contain $.executeAsync()";
+                       var errorMessage = "jQuery library contains $.executeAsync()";
+                       if ( testObject !== undefined && testObject.toString ) {
+                           errorMessage += " jQuery.executeAsync = '" + testObject.toString() + "'";
+                       }
+                       var msg = successMessage;
+                       if ( testObject !== undefined ) {
+                           msg = errorMessage;
+                       }
+                       assert.deepEqual( testObject, undefined, msg );
+
+                   } );
+
+    QUnit.isolatedTest( moduleName, "jQuery v2.1.1 object must not have a method called $.executeAsync()",
+                        getEmptyFrameContentWithJS( ["http://code.jquery.com/jquery-2.1.1.min.js"] ),
+                        "jQuery", function ( assert, isolatedWindow ) {
+                            //Arrange
+                            var testObject;
+
+                            //Act
+                            testObject = isolatedWindow.$.executeAsync;
+
+                            //Assert
+                            var successMessage = "jQuery library does not contain $.executeAsync()";
+                            var errorMessage = "jQuery library contains $.executeAsync()";
+                            if ( testObject !== undefined && testObject.toString ) {
+                                errorMessage += " jQuery.executeAsync = '" + testObject.toString() + "'";
+                            }
+                            var msg = successMessage;
+                            if ( testObject !== undefined ) {
+                                msg = errorMessage;
+                            }
+                            assert.deepEqual( testObject, undefined, msg );
+
+                        } );
 
 
 } )( QUnit );
