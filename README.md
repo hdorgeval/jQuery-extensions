@@ -158,6 +158,31 @@ $.getQueryStringData("http://contoso.com?a=1&b=2");
 ```
 
 
+## Async extensions
+
+jQuery-extensions contains utility methods that are used to execute JavaScript code asynchronously in order to free the UI thread.
+
+**$.executeAsync( context, f, delay, asyncKey )**
+
+Execute asynchrounously input function f.
+
+context : Object that will be used to set the this keyword for method f.
+
+f : Function that will be called asynchronously.
+
+delay : Number of milliseconds to wait before calling the function f.
+
+asyncKey : A key that is used to debounce the call of the function f. For example, if method f is called asynchronously at a frequency < delay, the call to the method f is deferred until the call frequency become > delay. Usefull when listening to events that are raised at a very high speed like a scroll event.
+
+Examples:
+
+```javascript
+$.executeAsync(this,f); // <=> setTimeout( function () { f.call( this );}, 0 );
+
+```
+
+
+
 ## Non-Chained extensions
 
 jQuery-extensions contains jQuery methods that enables to get non-jQuery data from the jQuery object. Hence these methods cannot be chained with standard jQuery methods.
