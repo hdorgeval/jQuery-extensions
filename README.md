@@ -141,6 +141,22 @@ $.isNotFunction(function(){} + ''); //true
 ```
 
 
+**$.isNumber( input )**
+
+Check if input object is a number.
+
+input : Any kind of object : literal object, string, number, boolean, function, etc...
+
+Examples:
+
+```javascript
+$.isNumber(2); //true
+$.isNumber("2"); //true
+$.isNumber("2a"); //false
+$.isNumber(true); //false
+```
+
+
 **$.getQueryStringData( )**
 
 Get the query string of the current web page url as a literal object.
