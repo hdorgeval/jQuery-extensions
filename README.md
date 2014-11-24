@@ -197,6 +197,9 @@ $.getQueryStringData("http://contoso.com?a=1&b=2");
 
 jQuery-extensions contains utility methods that are used to execute JavaScript code asynchronously in order to free the UI thread.
 
+Special credit to Ben Vinegar and Anton Kovalyov authors of the book : Third-Party JavaScript (Manning Press).
+The Async extensions are inspired by their work.
+
 **$.executeAsync( context, f, delay, asyncKey )**
 
 Execute asynchrounously input function f.
