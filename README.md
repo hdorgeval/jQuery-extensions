@@ -221,6 +221,35 @@ $.executeAsync(this,f); // <=> setTimeout( function () { f.call( this );}, 0 );
 
 
 
+**$.executeAsyncLoopOnArray( options )**
+
+Execute a loop asynchronously. At each iteration the thread is released and the UI thread can still process user actions.
+
+options : Literal object that holds all callbacks and the input array. This object has the following signature:
+
+```javascript
+options = {
+    input,          //input array on which to execute the asynchronous for loop
+    processItem,    //The callback that is called at each iteration
+                    //The callback must have the following signature function(i,item){} where i is the loop counter and item is input[i].
+    context,        //The object that will be accessible within the callbacks with the this keyword.
+    onStart,        //The callback that will be called once before the loop starts.
+    onProgress,     //The callback that will be called at each iteration to enable the caller to update the DOM with a progress bar
+    onEnd,          //The callback that will be called when all iterations are done.
+    cancel,         //The callback that will be called at each iteration to check if the loop must be canceled due to external business conditions.
+                    // The cancel callback must have the following signature : function(i,item){} where i is the loop counter and item is input[i].
+                    // The cancel callback must return true of false.
+    onCanceled      //The callback that will be called if the loop has been canceled
+}
+```
+
+Examples:
+
+```javascript
+$.executeAsync(this,f); // <=> setTimeout( function () { f.call( this );}, 0 );
+
+```
+
 ## Non-Chained extensions
 
 jQuery-extensions contains jQuery methods that enables to get non-jQuery data from the jQuery object. Hence these methods cannot be chained with standard jQuery methods.
