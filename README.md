@@ -143,7 +143,9 @@ $.isNotFunction(function(){} + ''); //true
 
 **$.isNumber( input )**
 
-Check if input object is a number.
+**$.isNotNumber( input )**
+
+Check if input object is (or is not) a number.
 
 input : Any kind of object : literal object, string, number, boolean, function, etc...
 
@@ -154,6 +156,23 @@ $.isNumber(2); //true
 $.isNumber("2"); //true
 $.isNumber("2a"); //false
 $.isNumber(true); //false
+```
+
+
+
+**$.isArrayEx ( input )**
+
+**$.isNotArray( input )**
+
+Check if input object is (or is not) an array.
+
+input : Any kind of object : literal object, string, number, boolean, function, etc...
+
+Examples:
+
+```javascript
+$.isArrayEx([]); //true
+$.isArrayEx([1,2]); //true
 ```
 
 
