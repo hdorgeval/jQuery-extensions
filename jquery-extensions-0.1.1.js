@@ -145,6 +145,31 @@
     }
     //end Core string extensions
 
+    //Core Array extensions
+    if ( [].duplicate === undefined ) {
+        Array.prototype.duplicate = function ( input ) {
+            /// <signature>
+            /// <summary>Duplicate input array.</summary>
+            /// <param name="input" type="Array">Array to be duplicated</param>
+            /// <returns type="Array">Returns a new array that is a copy of input array.</returns>
+            /// </signature>
+            try {
+                var duplicatedArray = [];
+                var itemCount = this.length;
+                for ( var i = 0; i < itemCount; i++ ) {
+                    var item = this[i];
+                    duplicatedArray.push( item );
+                }
+
+                return duplicatedArray;
+
+            } catch ( e ) {
+                return [];
+            }
+        };
+    }
+    //end Core array extensions
+
     $.isString = function (input) {
         /// <signature>
         /// <summary>Check if input object is a string.
@@ -236,7 +261,63 @@
         }
     };
 
-    
+    $.isNotNumber = function ( input ) {
+        /// <signature>
+        /// <summary>Check if input object is not a number.
+        ///</summary>
+        /// <param name="input" type="Object">Any kind of object : literal object, string, number, boolean, function, etc...</param>
+        /// <returns type="Boolean">Returns true if input parameter is not a number.</returns>
+        /// </signature>
+        return $.isNumber( input ) === false;
+    };
+
+    extensions.isArray = function ( input ) {
+        /// <signature>
+        /// <summary>Check if input object is an array.
+        ///</summary>
+        /// <param name="input" type="Object">Any kind of object : literal object, string, number, boolean, function, etc...</param>
+        /// <returns type="Boolean">Returns true if input parameter is an array.</returns>
+        /// </signature>
+        try {
+            if (extensions.isNullOrUndefined(input)) {
+                return false;
+            }
+
+            if (input.push && $.isFunction( input.push) ) {
+                return true;
+            }
+
+            return false;
+
+        } catch (e) {
+            return false;
+        }
+    };
+
+    $.isArrayEx = function ( input ) {
+        /// <signature>
+        /// <summary>Check if input object is either null or undefined or empty.
+        ///</summary>
+        /// <param name="input" type="Object">Any kind of object : literal object, string, number, boolean, function, etc...</param>
+        /// <returns type="Boolean">Returns true if input parameter is empty.</returns>
+        /// </signature>
+        try {
+            var result = extensions.isArray( input );
+            return result;
+        } catch ( e ) {
+            return false;
+        }
+    };
+
+    $.isNotArray = function ( input ) {
+        /// <signature>
+        /// <summary>Check if input object is not an array.
+        ///</summary>
+        /// <param name="input" type="Object">Any kind of object : literal object, string, number, boolean, function, etc...</param>
+        /// <returns type="Boolean">Returns true if input parameter is not an array.</returns>
+        /// </signature>
+        return extensions.isArray( input ) === false;
+    };
 
     extensions.getQueryStringData = function (url) {
         /// <signature>
@@ -831,6 +912,170 @@
             setTimeout( f, 0 );
         }
     };
+
+    $.executeAsyncLoopOnArray = function ( options ) {
+        /// <signature>
+        /// <summary>Execute a loop asynchronously. 
+        ///     At each iteration the thread is released and the UI thread can still process user actions</summary>
+        ///     The callback must have the following signature function(i,item){} where i is the loop counter and item is input[i].
+        ///     Inside the callback f, the this keyword is the context input parameter.
+        /// <param name="options" type="Object">Literal object that holds all callbacks and the input array.
+        ///         This object has the following signature:
+        ///         options = {
+        ///             input : input array on which to execute the asynchronous for loop
+        ///             processItem : The callback that is called at each iteration
+        ///             context : The object that will be accessible within the callbacks with the this keyword.
+        ///             onStart : The callback that will be called once before the loop starts.
+        ///             onProgress : The callback that will be called at each iteration to enable the caller to update the DOM with a progress bar
+        ///             onEnd : The callback that will be called when all iterations are done.
+        ///             cancel : The callback that will be called at each iteration to check if the loop must be canceled due to external business conditions.
+        ///                     The cancel callback must have the following signature : function(i,item){} where i is the loop counter and item is input[i].
+        ///                     The cancel callback must return true of false.
+        ///             onCanceled : The callback that will be called if the loop has been canceled
+        ///         }
+        /// </param>
+        /// <returns type="void"></returns>
+        /// </signature>
+        try {
+            if ( $.isNullOrUndefinedOrEmpty(options) ) {
+                $.logError( {
+                    functionName: "$.executeAsyncLoopOnArray",
+                    message: "options parameter is null or undefined or empty : '" + options + "'"
+                } );
+                return;
+            }
+
+            var input = options.input;
+            if ( $.isNotArray( input ) ) {
+                $.logError( {
+                    functionName: "$.executeAsyncLoopOnArray",
+                    message: "input property is not an array but is: '" + input + "'"
+                } );
+                return;
+            }
+
+            var processItem = options.processItem;
+            if ( $.isNotFunction( processItem ) ) {
+                $.logError( {
+                    functionName: "$.executeAsyncLoopOnArray",
+                    message: "processItem callback is not a function but is: '" + processItem + "'"
+                } );
+                return;
+            }
+
+            var itemCount = input.length;
+            if ( itemCount === 0 ) {
+                //nothing to do
+                return;
+            }
+
+            var context = options.context;
+            if ( extensions.isNullOrUndefined( options.context ) ) {
+                context = this;
+            }
+
+            //call the onStart callback
+            var onStart = options.onStart;
+            if ( onStart && $.isFunction( onStart ) ) {
+                try {
+                    onStart.call( context );
+                } catch ( e ) {
+                    $.logException( e );
+                }
+            }
+
+            var cancel = options.cancel;
+            var cancelCallbackMustBeCalled = false;
+            if ( cancel && $.isFunction( cancel ) ) {
+                cancelCallbackMustBeCalled = true;
+            }
+
+            var onProgress = options.onProgress;
+            var onProgressCallbackMustBeCalled = false;
+            if ( onProgress && $.isFunction( onProgress ) ) {
+                onProgressCallbackMustBeCalled = true;
+            }
+
+            var onEnd = options.onEnd;
+            var onCanceled = options.onCanceled;
+
+            //work only on a copy of the input array
+            var input2 = input.duplicate();
+
+            var i = -1;
+            var iterationCounter = 0;
+            var canceled = false;
+
+            var processNext = function () {
+                try {
+                    var item = input2.shift();
+                    i += 1;
+
+                    try {
+                        processItem.call( context, i, item );
+                    } catch ( e ) {
+                        $.logException( e );
+                    }
+                    
+                    //check if the loop must be canceled
+                    if ( cancelCallbackMustBeCalled ) {
+                        canceled = cancel.call( context, i, item );
+                    }
+
+                } catch ( e ) {
+                    $.logException( e );
+                }
+                finally {
+                    iterationCounter += 1;
+                    if ( onProgressCallbackMustBeCalled ) {
+                        try {
+                            onProgress.call( context, iterationCounter, itemCount );
+                        } catch ( e ) {
+                            $.logException( e );
+                        }
+                    }
+
+                    // check for end of loop
+                    if ( input2.length === 0 && onEnd === undefined ) {
+                        return;
+                    }
+
+                    if ( input2.length === 0 && $.isFunction( onEnd ) ) {
+                        try {
+                            onEnd.call( context );
+                        } catch ( e ) {
+                            $.logException( e );
+                        }
+                        
+                        return;
+                    }
+
+                    if ( canceled === true && $.isFunction( onCanceled ) ) {
+                        try {
+                            onCanceled.call( context );
+                        } catch ( e ) {
+                            $.logException( e );
+                        }
+                        
+                        return;
+                    }
+
+                    if ( canceled === true ) {
+                        return;
+                    }
+
+                    //release thread to let the UI be responsive
+                    setTimeout( processNext, 0 );
+                }
+            };
+
+            processNext();
+
+        } catch ( e ) {
+            $.logException( e );
+        }
+    };
+
     
 
 })(jQuery);
