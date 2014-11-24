@@ -251,7 +251,7 @@ $.executeAsyncLoopOnArray( {
     processItem : function( i, item ){ ... },
     context : this,
     onStart : function() { ... },
-    onProgress : function( i,itemsCount ){ ... }, //itemsCount = number of element in input array.
+    onProgress : function( i,itemsCount ){ ... }, //itemsCount = number of elements in input array.
     onEnd : function() { ... },
     cancel : function ( i, item ){ ... },
     onCanceled : function() { ... }
