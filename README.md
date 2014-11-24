@@ -246,7 +246,16 @@ options = {
 Examples:
 
 ```javascript
-$.executeAsync(this,f); // <=> setTimeout( function () { f.call( this );}, 0 );
+$.executeAsyncLoopOnArray( {
+    input : [1,2,3],
+    processItem : function( i, item ){ ... },
+    context : this,
+    onStart : function() { ... },
+    onProgress : function( i,itemsCount ){ ... }, //itemsCount = number of element in input array.
+    onEnd : function() { ... },
+    cancel : function ( i, item ){ ... },
+    onCanceled : function() { ... }
+});
 
 ```
 
