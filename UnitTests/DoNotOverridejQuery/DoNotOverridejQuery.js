@@ -462,6 +462,100 @@
                         } );
 
 
+
+    QUnit.isolatedTest( moduleName, "jQuery v1.11.1 object must not have a method called found()",
+                   getEmptyFrameContentWithJS( ["http://code.jquery.com/jquery-1.11.1.min.js"] ),
+                   "jQuery", function ( assert, isolatedWindow ) {
+                       //Arrange
+                       var testObject;
+
+                       //Act
+                       testObject = isolatedWindow.$('#test').found;
+
+                       //Assert
+                       var successMessage = "jQuery library does not contain found()";
+                       var errorMessage = "jQuery library contains found()";
+                       if ( testObject !== undefined && testObject.toString ) {
+                           errorMessage += " $(selector).found = '" + testObject.toString() + "'";
+                       }
+                       var msg = successMessage;
+                       if ( testObject !== undefined ) {
+                           msg = errorMessage;
+                       }
+                       assert.deepEqual( testObject, undefined, msg );
+
+                   } );
+
+    QUnit.isolatedTest( moduleName, "jQuery v2.1.1 object must not have a method called found()",
+                        getEmptyFrameContentWithJS( ["http://code.jquery.com/jquery-2.1.1.min.js"] ),
+                        "jQuery", function ( assert, isolatedWindow ) {
+                            //Arrange
+                            var testObject;
+
+                            //Act
+                            testObject = isolatedWindow.$( '#test' ).found;
+
+                            //Assert
+                            var successMessage = "jQuery library does not contain found()";
+                            var errorMessage = "jQuery library contains found()";
+                            if ( testObject !== undefined && testObject.toString ) {
+                                errorMessage += " $(selector).found = '" + testObject.toString() + "'";
+                            }
+                            var msg = successMessage;
+                            if ( testObject !== undefined ) {
+                                msg = errorMessage;
+                            }
+                            assert.deepEqual( testObject, undefined, msg );
+
+                        } );
+
+    QUnit.isolatedTest( moduleName, "jQuery v1.11.1 object must not have a method called notFound()",
+                   getEmptyFrameContentWithJS( ["http://code.jquery.com/jquery-1.11.1.min.js"] ),
+                   "jQuery", function ( assert, isolatedWindow ) {
+                       //Arrange
+                       var testObject;
+
+                       //Act
+                       testObject = isolatedWindow.$( '#test' ).notFound;
+
+                       //Assert
+                       var successMessage = "jQuery library does not contain notFound()";
+                       var errorMessage = "jQuery library contains notFound()";
+                       if ( testObject !== undefined && testObject.toString ) {
+                           errorMessage += " $(selector).notFound = '" + testObject.toString() + "'";
+                       }
+                       var msg = successMessage;
+                       if ( testObject !== undefined ) {
+                           msg = errorMessage;
+                       }
+                       assert.deepEqual( testObject, undefined, msg );
+
+                   } );
+
+    QUnit.isolatedTest( moduleName, "jQuery v2.1.1 object must not have a method called notFound()",
+                        getEmptyFrameContentWithJS( ["http://code.jquery.com/jquery-2.1.1.min.js"] ),
+                        "jQuery", function ( assert, isolatedWindow ) {
+                            //Arrange
+                            var testObject;
+
+                            //Act
+                            testObject = isolatedWindow.$( '#test' ).notFound;
+
+                            //Assert
+                            var successMessage = "jQuery library does not contain notFound()";
+                            var errorMessage = "jQuery library contains notFound()";
+                            if ( testObject !== undefined && testObject.toString ) {
+                                errorMessage += " $(selector).notFound = '" + testObject.toString() + "'";
+                            }
+                            var msg = successMessage;
+                            if ( testObject !== undefined ) {
+                                msg = errorMessage;
+                            }
+                            assert.deepEqual( testObject, undefined, msg );
+
+                        } );
+
+
 } )( QUnit );
 
 

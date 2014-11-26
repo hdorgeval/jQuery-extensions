@@ -143,11 +143,76 @@
             }
         };
     }
+
+    if ( "test".isNullOrEmpty === undefined ) {
+        String.prototype.isNullOrEmpty = function () {
+            try {
+                if ( this === null ) {
+                    return true;
+                }
+
+                if ( this === undefined ) {
+                    return true;
+                }
+
+                if ( this.length === undefined ) {
+                    return true;
+                }
+
+                if ( this.length === 0 ) {
+                    return true;
+                }
+
+                return false;
+
+            } catch ( e ) {
+                return false;
+            }
+        };
+    }
+
+    if ( "test".isNullOrEmptyOrWhitespace === undefined ) {
+        String.prototype.isNullOrEmptyOrWhitespace = function () {
+            try {
+                if ( this.isNullOrEmpty() ) {
+                    return true;
+                }
+
+                var trimedInput = this.trim();
+
+                if ( trimedInput.isNullOrEmpty() ) {
+                    return true;
+                }
+
+                return false;
+
+            } catch ( e ) {
+                return false;
+            }
+        };
+    }
+
+    if ( "test".toInt === undefined ) {
+        String.prototype.toInt = function () {
+            try {
+                if ( this.isNullOrEmptyOrWhitespace() ) {
+                    return NaN;
+                }
+
+                var intValue = parseInt( this, 10 );
+
+                return intValue;
+
+            } catch ( e ) {
+                return NaN;
+            }
+        };
+    }
     //end Core string extensions
 
     //Core Array extensions
     if ( [].duplicate === undefined ) {
-        Array.prototype.duplicate = function ( input ) {
+        Array.prototype.duplicate = function ( ) {
             /// <signature>
             /// <summary>Duplicate input array.</summary>
             /// <param name="input" type="Array">Array to be duplicated</param>
@@ -296,10 +361,10 @@
 
     $.isArrayEx = function ( input ) {
         /// <signature>
-        /// <summary>Check if input object is either null or undefined or empty.
+        /// <summary>Check if input object is an array
         ///</summary>
         /// <param name="input" type="Object">Any kind of object : literal object, string, number, boolean, function, etc...</param>
-        /// <returns type="Boolean">Returns true if input parameter is empty.</returns>
+        /// <returns type="Boolean">Returns true if input parameter is an array.</returns>
         /// </signature>
         try {
             var result = extensions.isArray( input );
@@ -334,6 +399,7 @@
         try {
             var queryString = document.location.search.substr( 1 );
             if ( url !== undefined ) {
+                queryString = '';
                 var parts = url.split( '?' );
                 if ( parts && parts.length === 2 ) {
                     queryString = parts[1];
@@ -916,14 +982,14 @@
     $.executeAsyncLoopOnArray = function ( options ) {
         /// <signature>
         /// <summary>Execute a loop asynchronously. 
-        ///     At each iteration the thread is released and the UI thread can still process user actions</summary>
-        ///     The callback must have the following signature function(i,item){} where i is the loop counter and item is input[i].
-        ///     Inside the callback f, the this keyword is the context input parameter.
+        ///     At each iteration the thread is released and the UI thread can still process user actions
+        /// </summary>
         /// <param name="options" type="Object">Literal object that holds all callbacks and the input array.
         ///         This object has the following signature:
         ///         options = {
         ///             input : input array on which to execute the asynchronous for loop
         ///             processItem : The callback that is called at each iteration
+        ///                           The callback must have the following signature function(i,item){} where i is the loop counter and item is input[i].
         ///             context : The object that will be accessible within the callbacks with the this keyword.
         ///             onStart : The callback that will be called once before the loop starts.
         ///             onProgress : The callback that will be called at each iteration to enable the caller to update the DOM with a progress bar
@@ -1151,7 +1217,97 @@
                 return false;
             }
         }
-    });
+    } );
+
+    $.fn.extend( {
+        toBooleanOrDefaultFromAttribute: function ( attributeName, defaultValue ) {
+            /// <signature>
+            /// <summary>Get the attribute value as a boolean. 
+            ///     typical usage : var jqElement = $(selector); 
+            ///                     var attrValue = jqElement.toBooleanOrDefaultFromAttribute("mycustomattribute",false);
+            ///</summary>
+            /// <param name="attributeName" type="String">Name of the attribute.</param>
+            /// <param name="defaultValue" type="Boolean">Value returned by this method when the attribute 
+            ///                         has not been found or when its value is empty.</param>
+            /// <returns type="Boolean">Returns the value of the attribute as boolean type.</returns>
+            /// </signature>
+            try {
+                if ( this.notFound() ) {
+                    return defaultValue;
+                }
+
+                if ( $.isNotString( attributeName ) ) {
+                    return defaultValue;
+                }
+
+                var attributeValue = this.attr( attributeName );
+                if ( $.isNullOrUndefinedOrEmpty( attributeValue ) ) {
+                    return defaultValue;
+                }
+
+                if ( $.isNotString( attributeValue ) ) {
+                    return defaultValue;
+                }
+
+                attributeValue = attributeValue.trim();
+
+                if ( attributeValue.isNullOrEmptyOrWhitespace() ) {
+                    return defaultValue;
+                }
+
+                if ( attributeValue === "true" ) {
+                    return true;
+                }
+
+                return false;
+
+            } catch ( e ) {
+                $.logException( e );
+                return defaultValue;
+            }
+        }
+    } );
+
+    $.fn.extend( {
+        toIntOrDefaultFromAttribute: function ( attributeName, defaultValue ) {
+            /// <signature>
+            /// <summary>Get the attribute value as an integer</summary>
+            /// <param name="attributeName" type="String">Name of the tag attribute</param>
+            /// <param name="defaultValue" type="Number">Value to return if attribute is not found or is not in valid format, or is empty.</param>
+            /// <returns type="Number">Returns the found attribute value or the defaultValue if attribute is not found or its value is not valid, or is empty.</returns>
+            /// </signature>
+            try {
+                if ( this.notFound() ) {
+                    return defaultValue;
+                }
+
+                if ( $.isNotString( attributeName ) ) {
+                    return defaultValue;
+                }
+
+                var attributeValue = this.attr( attributeName );
+                if ( $.isNullOrUndefinedOrEmpty( attributeValue ) ) {
+                    return defaultValue;
+                }
+
+                if ( $.isNotNumber( attributeValue ) ) {
+                    return defaultValue;
+                }
+
+                var intValue = attributeValue.toInt();
+
+                return intValue;
+
+            } catch ( e ) {
+                $.logException( e );
+                return defaultValue;
+            }
+        }
+    } );
+
+
 
 } )( jQuery );
 //end non-chained extensions
+
+
