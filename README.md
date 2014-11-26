@@ -342,3 +342,18 @@ Example:
 var jqElement = $(selector); 
 var attrValue = jqElement.toIntOrDefaultFromAttribute("mycustomattribute",0); //= 0 or the attribute value as an integer
 ```
+
+**.toStringOrDefaultFromAttribute( attributeName, defaultValue )**
+
+Get the attribute value of a DOM element as a string.
+
+attributeName : Name of the attribute.
+
+defaultValue : Value returned by this method when the attribute has not been found or when its value is empty.
+
+Example:
+
+```javascript
+var jqElement = $(selector); 
+var attrValue = jqElement.toStringOrDefaultFromAttribute("mycustomattribute","myValue"); //= "myValue" or the attribute value as a string
+```
