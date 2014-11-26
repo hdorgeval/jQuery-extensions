@@ -368,6 +368,151 @@
                         } );
 
 
+    QUnit.isolatedTest( moduleName, "jQuery v1.11.1 object must not have a method called $.isNotNumber()",
+                   getEmptyFrameContentWithJS( ["http://code.jquery.com/jquery-1.11.1.min.js"] ),
+                   "jQuery", function ( assert, isolatedWindow ) {
+                       //Arrange
+                       var testObject;
+
+                       //Act
+                       testObject = isolatedWindow.$.isNotNumber;
+
+                       //Assert
+                       var successMessage = "jQuery library does not contain $.isNotNumber()";
+                       var errorMessage = "jQuery library contains $.isNotNumber()";
+                       if ( testObject !== undefined && testObject.toString ) {
+                           errorMessage += " jQuery.isNotNumber = '" + testObject.toString() + "'";
+                       }
+                       var msg = successMessage;
+                       if ( testObject !== undefined ) {
+                           msg = errorMessage;
+                       }
+                       assert.deepEqual( testObject, undefined, msg );
+
+                   } );
+
+    QUnit.isolatedTest( moduleName, "jQuery v2.1.1 object must not have a method called $.isNotNumber()",
+                        getEmptyFrameContentWithJS( ["http://code.jquery.com/jquery-2.1.1.min.js"] ),
+                        "jQuery", function ( assert, isolatedWindow ) {
+                            //Arrange
+                            var testObject;
+
+                            //Act
+                            testObject = isolatedWindow.$.isNotNumber;
+
+                            //Assert
+                            var successMessage = "jQuery library does not contain $.isNotNumber()";
+                            var errorMessage = "jQuery library contains $.isNotNumber()";
+                            if ( testObject !== undefined && testObject.toString ) {
+                                errorMessage += " jQuery.isNotNumber = '" + testObject.toString() + "'";
+                            }
+                            var msg = successMessage;
+                            if ( testObject !== undefined ) {
+                                msg = errorMessage;
+                            }
+                            assert.deepEqual( testObject, undefined, msg );
+
+                        } );
+
+
+
+
+    QUnit.isolatedTest( moduleName, "jQuery v1.11.1 object must not have a method called $.isInt()",
+                  getEmptyFrameContentWithJS( ["http://code.jquery.com/jquery-1.11.1.min.js"] ),
+                  "jQuery", function ( assert, isolatedWindow ) {
+                      //Arrange
+                      var testObject;
+
+                      //Act
+                      testObject = isolatedWindow.$.isInt;
+
+                      //Assert
+                      var successMessage = "jQuery library does not contain $.isInt()";
+                      var errorMessage = "jQuery library contains $.isInt()";
+                      if ( testObject !== undefined && testObject.toString ) {
+                          errorMessage += " jQuery.isInt = '" + testObject.toString() + "'";
+                      }
+                      var msg = successMessage;
+                      if ( testObject !== undefined ) {
+                          msg = errorMessage;
+                      }
+                      assert.deepEqual( testObject, undefined, msg );
+
+                  } );
+
+    QUnit.isolatedTest( moduleName, "jQuery v2.1.1 object must not have a method called $.isInt()",
+                        getEmptyFrameContentWithJS( ["http://code.jquery.com/jquery-2.1.1.min.js"] ),
+                        "jQuery", function ( assert, isolatedWindow ) {
+                            //Arrange
+                            var testObject;
+
+                            //Act
+                            testObject = isolatedWindow.$.isInt;
+
+                            //Assert
+                            var successMessage = "jQuery library does not contain $.isInt()";
+                            var errorMessage = "jQuery library contains $.isInt()";
+                            if ( testObject !== undefined && testObject.toString ) {
+                                errorMessage += " jQuery.isInt = '" + testObject.toString() + "'";
+                            }
+                            var msg = successMessage;
+                            if ( testObject !== undefined ) {
+                                msg = errorMessage;
+                            }
+                            assert.deepEqual( testObject, undefined, msg );
+
+                        } );
+
+
+    QUnit.isolatedTest( moduleName, "jQuery v1.11.1 object must not have a method called $.isNotInt()",
+                  getEmptyFrameContentWithJS( ["http://code.jquery.com/jquery-1.11.1.min.js"] ),
+                  "jQuery", function ( assert, isolatedWindow ) {
+                      //Arrange
+                      var testObject;
+
+                      //Act
+                      testObject = isolatedWindow.$.isNotInt;
+
+                      //Assert
+                      var successMessage = "jQuery library does not contain $.isNotInt()";
+                      var errorMessage = "jQuery library contains $.isNotInt()";
+                      if ( testObject !== undefined && testObject.toString ) {
+                          errorMessage += " jQuery.isNotInt = '" + testObject.toString() + "'";
+                      }
+                      var msg = successMessage;
+                      if ( testObject !== undefined ) {
+                          msg = errorMessage;
+                      }
+                      assert.deepEqual( testObject, undefined, msg );
+
+                  } );
+
+    QUnit.isolatedTest( moduleName, "jQuery v2.1.1 object must not have a method called $.isNotInt()",
+                        getEmptyFrameContentWithJS( ["http://code.jquery.com/jquery-2.1.1.min.js"] ),
+                        "jQuery", function ( assert, isolatedWindow ) {
+                            //Arrange
+                            var testObject;
+
+                            //Act
+                            testObject = isolatedWindow.$.isNotInt;
+
+                            //Assert
+                            var successMessage = "jQuery library does not contain $.isNotInt()";
+                            var errorMessage = "jQuery library contains $.isNotInt()";
+                            if ( testObject !== undefined && testObject.toString ) {
+                                errorMessage += " jQuery.isNotInt = '" + testObject.toString() + "'";
+                            }
+                            var msg = successMessage;
+                            if ( testObject !== undefined ) {
+                                msg = errorMessage;
+                            }
+                            assert.deepEqual( testObject, undefined, msg );
+
+                        } );
+
+
+
+
     QUnit.isolatedTest( moduleName, "jQuery v1.11.1 object must not have a method called $.executeAsync()",
                    getEmptyFrameContentWithJS( ["http://code.jquery.com/jquery-1.11.1.min.js"] ),
                    "jQuery", function ( assert, isolatedWindow ) {

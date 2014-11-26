@@ -336,6 +336,40 @@
         return $.isNumber( input ) === false;
     };
 
+    $.isInt = function ( input ) {
+        /// <signature>
+        /// <summary>Check if input object is an integer.
+        ///</summary>
+        /// <param name="input" type="Object">Any kind of object : literal object, string, number, boolean, function, etc...</param>
+        /// <returns type="Boolean">Returns true if input parameter is an integer.</returns>
+        /// </signature>
+        try {
+            if ( $.isNotNumber(input) ) {
+                return false;
+            }
+
+            var remainder = input % 1;
+            if ( remainder === 0 ) {
+                return true;
+            }
+
+            return false;
+
+        } catch ( e ) {
+            return false;
+        }
+    };
+
+    $.isNotInt = function ( input ) {
+        /// <signature>
+        /// <summary>Check if input object is not an integer.
+        ///</summary>
+        /// <param name="input" type="Object">Any kind of object : literal object, string, number, boolean, function, etc...</param>
+        /// <returns type="Boolean">Returns true if input parameter is not an integer.</returns>
+        /// </signature>
+        return $.isInt( input ) === false;
+    };
+
     extensions.isArray = function ( input ) {
         /// <signature>
         /// <summary>Check if input object is an array.
@@ -918,8 +952,6 @@
 //end trace API
 
 
-
-
 //async extensions
 (function ($, undefined) {
     $.extensions = $.extensions || {};
@@ -1085,7 +1117,11 @@
                     
                     //check if the loop must be canceled
                     if ( cancelCallbackMustBeCalled ) {
-                        canceled = cancel.call( context, i, item );
+                        try {
+                            canceled = cancel.call( context, i, item );
+                        } catch ( e ) {
+                            $.logException( e );
+                        }
                     }
 
                 } catch ( e ) {
@@ -1294,9 +1330,47 @@
                     return defaultValue;
                 }
 
+                attributeValue = attributeValue + '';
                 var intValue = attributeValue.toInt();
 
                 return intValue;
+
+            } catch ( e ) {
+                $.logException( e );
+                return defaultValue;
+            }
+        }
+    } );
+
+    $.fn.extend( {
+        toStringOrDefaultFromAttribute: function ( attributeName, defaultValue ) {
+            /// <signature>
+            /// <summary>Get the attribute value as a string</summary>
+            /// <param name="attributeName" type="String">Name of the tag attribute</param>
+            /// <param name="defaultValue" type="Number">Value to return if attribute is not found or is not in valid format, or is empty.</param>
+            /// <returns type="String">Returns the found attribute value or the defaultValue if attribute is not found or its value is not valid, or is empty.</returns>
+            /// </signature>
+            try {
+                if ( this.notFound() ) {
+                    return defaultValue;
+                }
+
+                if ( $.isNotString( attributeName ) ) {
+                    return defaultValue;
+                }
+
+                var attributeValue = this.attr( attributeName );
+                if ( $.isNotString( attributeValue ) ) {
+                    return defaultValue;
+                }
+
+                attributeValue = attributeValue.trim();
+
+                if ( attributeValue.isNullOrEmptyOrWhitespace() ) {
+                    return defaultValue;
+                }
+
+                return attributeValue;
 
             } catch ( e ) {
                 $.logException( e );
