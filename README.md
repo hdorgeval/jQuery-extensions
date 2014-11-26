@@ -307,3 +307,20 @@ Example:
 var jqElement = $(selector); 
 var attrValue = jqElement.toBooleanOrDefaultFromAttribute("mycustomattribute",false); //= true or false
 ```
+
+
+
+**.toIntOrDefaultFromAttribute( attributeName, defaultValue )**
+
+Get the attribute value of a DOM element as an integer.
+
+attributeName : Name of the attribute.
+
+defaultValue : Value returned by this method when the attribute has not been found or when its value is empty.
+
+Example:
+
+```javascript
+var jqElement = $(selector); 
+var attrValue = jqElement.toIntOrDefaultFromAttribute("mycustomattribute",0); //= 0 or the attribute value as an integer
+```
