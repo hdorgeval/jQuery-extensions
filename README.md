@@ -217,9 +217,10 @@ Examples:
 ```javascript
 $.executeAsync(this,f); // <=> setTimeout( function () { f.call( this );}, 0 );
 
+$(window).scroll(function (event) {
+    $.executeAsync(event, myFunction, 100, "scrollWindow");
+});
 ```
-
-
 
 **$.executeAsyncLoopOnArray( options )**
 
