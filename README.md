@@ -326,8 +326,6 @@ var jqElement = $(selector);
 var attrValue = jqElement.toBooleanOrDefaultFromAttribute("mycustomattribute",false); //= true or false
 ```
 
-
-
 **.toIntOrDefaultFromAttribute( attributeName, defaultValue )**
 
 Get the attribute value of a DOM element as an integer.
