@@ -292,3 +292,18 @@ if ( jqElement.notFound() ) {
     }
 ```
 
+
+**.toBooleanOrDefaultFromAttribute( attributeName, defaultValue )**
+
+Get the attribute value of a DOM element as a boolean.
+
+attributeName : Name of the attribute.
+
+defaultValue : Value returned by this method when the attribute has not been found or when its value is empty.
+
+Example:
+
+```javascript
+var jqElement = $(selector); 
+var attrValue = jqElement.toBooleanOrDefaultFromAttribute("mycustomattribute",false); //= true or false
+```
