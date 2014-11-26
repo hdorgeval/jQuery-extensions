@@ -159,6 +159,23 @@ $.isNumber(true); //false
 ```
 
 
+**$.isInt( input )**
+
+**$.isNotInt( input )**
+
+Check if input object is (or is not) an integer.
+
+input : Any kind of object : literal object, string, number, boolean, function, etc...
+
+Examples:
+
+```javascript
+$.isInt(2); //true
+$.isInt(2.1); //false
+$.isInt("2"); //true
+$.isInt("2.1"); //false
+```
+
 
 **$.isArrayEx ( input )**
 
