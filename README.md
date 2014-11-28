@@ -355,3 +355,23 @@ Example:
 var jqElement = $(selector); 
 var attrValue = jqElement.toStringOrDefaultFromAttribute("mycustomattribute","myValue"); //= "myValue" or the attribute value as a string
 ```
+
+## Event Handling Layer extensions
+
+jQuery-extensions contains an Event Handling layer that you can use to implement your own eventing mechanism in your JavaScript App.
+
+**$.tryFindFunctionByName( input )**
+
+try to find (in the window root object) a function by its name. This extension is usefull to execute a function when this function is embedded as the value of a data tag on a DOM element.
+
+input : name of your function. If the function is defined in a child object, you must prefix the name with the complete objects path from the root object (window).
+
+Examples:
+
+```javascript
+var isEmpty = $.tryFindFunctionByName("jQuery.extensions.isEmpty");
+isEmpty( {} ); // returns true
+
+var jqElement = $('<div callback="myFunction" />');
+var myFunction = $.tryFindFunctionByName(jqElement.attr('callback'));
+```
