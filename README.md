@@ -356,6 +356,8 @@ var jqElement = $(selector);
 var attrValue = jqElement.toStringOrDefaultFromAttribute("mycustomattribute","myValue"); //= "myValue" or the attribute value as a string
 ```
 
+
+
 ## Event Handling Layer extensions
 
 jQuery-extensions contains an Event Handling layer that you can use to implement your own eventing mechanism in your JavaScript App.
