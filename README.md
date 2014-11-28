@@ -362,6 +362,21 @@ var attrValue = jqElement.toStringOrDefaultFromAttribute("mycustomattribute","my
 
 jQuery-extensions contains an Event Handling layer that you can use to implement your own eventing mechanism in your JavaScript App.
 
+**$.registerEvents( eventNames )**
+
+Register your Application events.
+
+eventNames : Array of all the event names exposed by your Application.
+
+Examples:
+
+```javascript
+$.registerEvents(["onDataReceived", "onCellRendering", "onCellUpdating","onCellUpdated"]);
+```
+
+ 
+ 
+
 **$.tryFindFunctionByName( input )**
 
 Try to find (in the window root object) a function by its name. This extension is usefull to execute a function when this function is embedded as the value of a data tag on a DOM element.
