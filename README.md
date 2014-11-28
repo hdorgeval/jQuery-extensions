@@ -362,7 +362,7 @@ jQuery-extensions contains an Event Handling layer that you can use to implement
 
 **$.tryFindFunctionByName( input )**
 
-try to find (in the window root object) a function by its name. This extension is usefull to execute a function when this function is embedded as the value of a data tag on a DOM element.
+Try to find (in the window root object) a function by its name. This extension is usefull to execute a function when this function is embedded as the value of a data tag on a DOM element.
 
 input : name of your function. If the function is defined in a child object, you must prefix the name with the complete objects path from the root object (window).
 
