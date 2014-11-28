@@ -747,6 +747,147 @@
 
                         } );
 
+
+    QUnit.isolatedTest( moduleName, "jQuery v1.11.1 object must not have a method called $.registerEvents()",
+                 getEmptyFrameContentWithJS( ["http://code.jquery.com/jquery-1.11.1.min.js"] ),
+                 "jQuery", function ( assert, isolatedWindow ) {
+                     //Arrange
+                     var testObject;
+
+                     //Act
+                     testObject = isolatedWindow.$.registerEvents;
+
+                     //Assert
+                     var successMessage = "jQuery library does not contain $.registerEvents()";
+                     var errorMessage = "jQuery library contains $.registerEvents()";
+                     if ( testObject !== undefined && testObject.toString ) {
+                         errorMessage += " jQuery.registerEvents = '" + testObject.toString() + "'";
+                     }
+                     var msg = successMessage;
+                     if ( testObject !== undefined ) {
+                         msg = errorMessage;
+                     }
+                     assert.deepEqual( testObject, undefined, msg );
+
+                 } );
+
+    QUnit.isolatedTest( moduleName, "jQuery v2.1.1 object must not have a method called $.registerEvents()",
+                        getEmptyFrameContentWithJS( ["http://code.jquery.com/jquery-2.1.1.min.js"] ),
+                        "jQuery", function ( assert, isolatedWindow ) {
+                            //Arrange
+                            var testObject;
+
+                            //Act
+                            testObject = isolatedWindow.$.registerEvents;
+
+                            //Assert
+                            var successMessage = "jQuery library does not contain $.registerEvents()";
+                            var errorMessage = "jQuery library contains $.registerEvents()";
+                            if ( testObject !== undefined && testObject.toString ) {
+                                errorMessage += " jQuery.registerEvents = '" + testObject.toString() + "'";
+                            }
+                            var msg = successMessage;
+                            if ( testObject !== undefined ) {
+                                msg = errorMessage;
+                            }
+                            assert.deepEqual( testObject, undefined, msg );
+
+                        } );
+
+
+    QUnit.isolatedTest( moduleName, "jQuery v1.11.1 object must not have a method called $.registerEventHandler()",
+                 getEmptyFrameContentWithJS( ["http://code.jquery.com/jquery-1.11.1.min.js"] ),
+                 "jQuery", function ( assert, isolatedWindow ) {
+                     //Arrange
+                     var testObject;
+
+                     //Act
+                     testObject = isolatedWindow.$.registerEventHandler;
+
+                     //Assert
+                     var successMessage = "jQuery library does not contain $.registerEventHandler()";
+                     var errorMessage = "jQuery library contains $.registerEventHandler()";
+                     if ( testObject !== undefined && testObject.toString ) {
+                         errorMessage += " jQuery.registerEventHandler = '" + testObject.toString() + "'";
+                     }
+                     var msg = successMessage;
+                     if ( testObject !== undefined ) {
+                         msg = errorMessage;
+                     }
+                     assert.deepEqual( testObject, undefined, msg );
+
+                 } );
+
+    QUnit.isolatedTest( moduleName, "jQuery v2.1.1 object must not have a method called $.registerEventHandler()",
+                        getEmptyFrameContentWithJS( ["http://code.jquery.com/jquery-2.1.1.min.js"] ),
+                        "jQuery", function ( assert, isolatedWindow ) {
+                            //Arrange
+                            var testObject;
+
+                            //Act
+                            testObject = isolatedWindow.$.registerEventHandler;
+
+                            //Assert
+                            var successMessage = "jQuery library does not contain $.registerEventHandler()";
+                            var errorMessage = "jQuery library contains $.registerEventHandler()";
+                            if ( testObject !== undefined && testObject.toString ) {
+                                errorMessage += " jQuery.registerEventHandler = '" + testObject.toString() + "'";
+                            }
+                            var msg = successMessage;
+                            if ( testObject !== undefined ) {
+                                msg = errorMessage;
+                            }
+                            assert.deepEqual( testObject, undefined, msg );
+
+                        } );
+
+
+    QUnit.isolatedTest( moduleName, "jQuery v1.11.1 object must not have a method called $.raiseEvent()",
+                getEmptyFrameContentWithJS( ["http://code.jquery.com/jquery-1.11.1.min.js"] ),
+                "jQuery", function ( assert, isolatedWindow ) {
+                    //Arrange
+                    var testObject;
+
+                    //Act
+                    testObject = isolatedWindow.$.raiseEvent;
+
+                    //Assert
+                    var successMessage = "jQuery library does not contain $.raiseEvent()";
+                    var errorMessage = "jQuery library contains $.raiseEvent()";
+                    if ( testObject !== undefined && testObject.toString ) {
+                        errorMessage += " jQuery.raiseEvent = '" + testObject.toString() + "'";
+                    }
+                    var msg = successMessage;
+                    if ( testObject !== undefined ) {
+                        msg = errorMessage;
+                    }
+                    assert.deepEqual( testObject, undefined, msg );
+
+                } );
+
+    QUnit.isolatedTest( moduleName, "jQuery v2.1.1 object must not have a method called $.raiseEvent()",
+                        getEmptyFrameContentWithJS( ["http://code.jquery.com/jquery-2.1.1.min.js"] ),
+                        "jQuery", function ( assert, isolatedWindow ) {
+                            //Arrange
+                            var testObject;
+
+                            //Act
+                            testObject = isolatedWindow.$.raiseEvent;
+
+                            //Assert
+                            var successMessage = "jQuery library does not contain $.raiseEvent()";
+                            var errorMessage = "jQuery library contains $.raiseEvent()";
+                            if ( testObject !== undefined && testObject.toString ) {
+                                errorMessage += " jQuery.raiseEvent = '" + testObject.toString() + "'";
+                            }
+                            var msg = successMessage;
+                            if ( testObject !== undefined ) {
+                                msg = errorMessage;
+                            }
+                            assert.deepEqual( testObject, undefined, msg );
+
+                        } );
+
 } )( QUnit );
 
 

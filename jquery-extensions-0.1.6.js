@@ -208,6 +208,46 @@
             }
         };
     }
+
+    if ( "test".isInArray === undefined ) {
+        String.prototype.isInArray = function ( inputArray ) {
+            try {
+
+                if ( this.isNullOrEmptyOrWhitespace() ) {
+                    return false;
+                }
+
+                if ( $.isNotArray( inputArray ) ) {
+                    return false;
+                }
+
+                var itemCount = inputArray.length;
+
+                if ( itemCount === 0 ) {
+                    return false;
+                }
+
+                var thisValue = this.toString();
+
+                for ( var i = 0; i < itemCount; i++ ) {
+                    if ( inputArray[i] === thisValue ) {
+                        return true;
+                    }
+                }
+
+                return false;
+
+            } catch ( e ) {
+                return false;
+            }
+        };
+    }
+
+    if ( "test".isNotInArray === undefined ) {
+        String.prototype.isNotInArray = function ( inputArray ) {
+            return this.isInArray( inputArray ) === false;
+        };
+    }
     //end Core string extensions
 
     //Core Array extensions
@@ -1187,10 +1227,213 @@
 
 //Event Handlers extensions
 ( function ( $, undefined ) {
-    
+    $.extensions = $.extensions || {};
+    var extensions = $.extensions;
+    extensions.eventHandlers = extensions.eventHandlers || {};
+    var eventHandlers = extensions.eventHandlers;
+    var listeners = {};
+    var events = [];
+
+    eventHandlers.eventHasListeners = function ( eventName ) {
+        try {
+            if ( $.isNotString( eventName ) ) {
+                return false;
+            }
+
+            if ( eventName.isNullOrEmptyOrWhitespace() ) {
+                return false;
+            }
+
+            if ( $.isNullOrUndefinedOrEmpty( listeners ) ) {
+                return false;
+            }
+
+            var eventNameListeners = listeners[eventName];
+
+            if ( $.isNullOrUndefinedOrEmpty( eventNameListeners ) ) {
+                return false;
+            }
+
+            return true;
+
+        } catch ( e ) {
+            //TODO : log
+            $.logException( e );
+            return false;
+        }
+    };
+
+    eventHandlers.eventHasNoListener = function ( eventName ) {
+        return eventHandlers.eventHasListeners( eventName ) === false;
+    };
+
+    eventHandlers.eventHandlerIsRegistered = function ( eventName, handler ) {
+        try {
+            if ( eventHandlers.eventHasNoListener( eventName ) ) {
+                return false;
+            }
+
+            if ( $.isNotFunction( handler ) ) {
+                return false;
+            }
+
+            // get all listeners for this event
+            var eventListeners = listeners[eventName];
+            var listernersCount = eventListeners.length;
+
+            for ( var i = 0; i < listernersCount; i++ ) {
+                if ( eventListeners[i] === handler ) {
+                    return true;
+                }
+            }
+
+            return false;
+
+        } catch ( e ) {
+            $.logException( e );
+            return false;
+        }
+    };
+
+    $.registerEvents = function ( eventNames ) {
+        /// <signature>
+        /// <summary>Register your Application events</summary>
+        /// <param name="eventNames" type="Array">Array of all the event names exposed by your Application.</param>
+        /// <returns type="void"></returns>
+        /// </signature>
+        try {
+            if ( $.isNullOrUndefinedOrEmpty( eventNames ) ) {
+                return;
+            }
+
+            if ( $.isNotArray( eventNames ) ) {
+                $.logError( {
+                    functionName: "$.registerEvents",
+                    message: "input parameter should be an array of string but is : '" + eventNames + "'"
+                } );
+                return;
+            }
+
+            events = [];
+            var eventsCount = eventNames.length;
+            for ( var i = 0; i < eventsCount; i++ ) {
+                events.push( eventNames[i] );
+            }
+
+        } catch ( e ) {
+            $.logException( e );
+        }
+    };
+
+    $.registerEventHandler = function ( eventName, handler ) {
+        /// <signature>
+        /// <summary>Register your event handler to a specific application event.</summary>
+        /// <param name="eventName" type="String">Name of the event you want to listen to.</param>
+        /// <param name="handler" type="Function">Function that will be called when raising the event. 
+        ///     This function must have the signature function(source, eventArgs){}, 
+        ///     where source is the object that is at the origin of the event, 
+        ///     and eventArgs is a placeholder object for informations needed by the listener.
+        /// </param>
+        /// <returns type="void"></returns>
+        /// </signature>
+        try {
+            if ( $.isNotFunction( handler ) ) {
+                $.logError( {
+                    functionName: "$.registerEventHandler",
+                    message: "The event handler is not a function.",
+                    info: "Check the name of your event handler for event : '" + eventName + "'."
+                } );
+                return;
+            }
+
+            if ( $.isNotString( eventName ) ) {
+                $.logError( {
+                    functionName: "$.registerEventHandler",
+                    message: "eventName parameter should be a string but is : '" + eventName + "'"
+                } );
+                return;
+            }
+
+            if ( eventName.isNotInArray(events) ) {
+                $.logError( {
+                    functionName: "$.registerEventHandler",
+                    message: "eventName '" + eventName + "' has not been registered by the Application.",
+                    info: "Ensure the application has called the $.registerEvents() method."
+                } );
+                return;
+            }
+
+            // check if event handler has already been registered
+            if ( eventHandlers.eventHandlerIsRegistered( eventName, handler ) ) {
+                return;
+            }
+
+            var eventListeners = listeners[eventName];
+            if ( $.isNullOrUndefinedOrEmpty( eventListeners ) ) {
+                listeners[eventName] = [];
+            }
+
+            //TODO : check if eventName is a known event
+            listeners[eventName].push( handler );
+
+        } catch ( e ) {
+            $.logException( e );
+        }
+    };
+
+    $.raiseEvent = function ( options ) {
+        /// <signature>
+        /// <summary>Raise Application Event Synchronously. 
+        /// </summary>
+        /// <param name="options" type="Object">Literal object that holds all data to raise the event.
+        ///         This object has the following signature:
+        ///         options = {
+        ///             eventName       : name of the event
+        ///             eventContext    : The object that will be accessible within the listeners callbacks with the this keyword.
+        ///             eventSource     : The object that is at the origin of the event.
+        ///                               This object will passed as the first parameter of the listener callback
+        ///             eventArgs       : Literal object that contains informations usefull for the listener.
+        ///                               This object will be passed as the second argument of the listener callback.
+        ///         }
+        /// </param>
+        /// <returns type="void"></returns>
+        /// </signature>
+        try {
+            if ( $.isNullOrUndefinedOrEmpty(options) ) {
+                return;
+            }
+
+            var eventName = options.eventName;
+
+            if ( eventHandlers.eventHasNoListener( eventName ) ) {
+                return;
+            }
+
+            var eventListeners = listeners[eventName];
+            var listernersCount = eventListeners.length;
+
+            var eventContext = options.eventContext;
+            if ( $.isNullOrUndefinedOrEmpty( eventContext ) ) {
+                eventContext = this;
+            }
+
+            for ( var i = 0; i < listernersCount; i++ ) {
+                var handler = eventListeners[i];
+                try {
+                    handler.call(eventContext, options.eventSource, options.eventArgs );
+                } catch ( e ) {
+                    $.logException( e );
+                }
+            }
+
+        } catch ( e ) {
+            $.logException( e );
+        }
+    };
+
     $.tryFindFunctionByName = function ( input ) {
         /// <signature>
-        /// <summary>try to find (in the window root object) a function by its name.
+        /// <summary>Try to find (in the window root object) a function by its name.
         ///</summary>
         /// <param name="input" type="String">Name of the function to find.</param>
         /// <returns type="Function">Returns the found function. Returns null otherwise.</returns>
