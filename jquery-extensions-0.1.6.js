@@ -1314,10 +1314,13 @@
                 return;
             }
 
-            events = [];
             var eventsCount = eventNames.length;
             for ( var i = 0; i < eventsCount; i++ ) {
-                events.push( eventNames[i] );
+                var eventName = eventNames[i] + '';
+                if ( eventName.isInArray(events) ) {
+                    continue;
+                }
+                events.push( eventName );
             }
 
         } catch ( e ) {
