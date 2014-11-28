@@ -374,7 +374,57 @@ Examples:
 $.registerEvents(["onDataReceived", "onCellRendering", "onCellUpdating","onCellUpdated"]);
 ```
 
+
+**$.registerEventHandler( eventName, handler )**
+
+Register your event handler to a specific Application event.
+
+eventName : Name of the event you want to listen to.
+
+handler : Function that will be called when raising the event. This function must have the signature function(source, eventArgs){}, where source is the object that is at the origin of the event, and eventArgs is a placeholder object for informations needed by the listener.
+
+Examples:
+
+```javascript
+var onDataReceivedEventHandler = function (source, eventArgs) {...};
+$.registerEventHandler("onDataReceived", onDataReceivedEventHandler);
+```
+
  
+ 
+**$.raiseEvent( options )**
+
+Raise Application Event Synchronously.
+
+options : Literal object that holds all data to raise the event. This object has the following signature:
+
+```javascript
+options = {
+    eventName,      //name of the event to raise
+    eventContext,   //The object that will be accessible within the listeners callbacks with the this keyword.
+    eventSource,    //The object that is at the origin of the event.
+                    //This object will passed as the first parameter of the listener callback
+    eventArgs       //Literal object that contains informations usefull for the listener.
+                    //This object will be passed as the second argument of the listener callback.
+}
+```
+
+Examples:
+
+```javascript
+var eventArgs = {
+                    rowId: rowid,
+                    rowData: data,
+                    cancel: false,
+                    cancelReason: ""
+                };
+
+$.raiseEvent({eventName: "onCellUpdating", eventContext:this, eventSource: anyObject, eventArgs: eventArgs);
+if (eventArgs.cancel === true) { 
+    //cancel cell modification done by the user
+}
+```
+
  
 
 **$.tryFindFunctionByName( input )**
