@@ -394,9 +394,9 @@ $.registerEventHandler("onDataReceived", onDataReceivedEventHandler);
  
 **$.raiseEvent( options )**
 
-Raise Application Event Synchronously.
+Raise Application Event synchronously.
 
-options : Literal object that holds all data to raise the event. This object has the following signature:
+options : Literal object that holds all data needed to raise the event. This object has the following signature:
 
 ```javascript
 options = {
@@ -413,13 +413,14 @@ Examples:
 
 ```javascript
 var eventArgs = {
+                    cellName: 'price'
                     rowId: rowid,
                     rowData: data,
                     cancel: false,
                     cancelReason: ""
                 };
 
-$.raiseEvent({eventName: "onCellUpdating", eventContext:this, eventSource: anyObject, eventArgs: eventArgs);
+$.raiseEvent({eventName: "onCellUpdating", eventContext:this, eventSource: anyObject, eventArgs: eventArgs});
 if (eventArgs.cancel === true) { 
     //cancel cell modification done by the user
 }
