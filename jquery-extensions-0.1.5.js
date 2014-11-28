@@ -1184,6 +1184,70 @@
 // end async extensions
 
 
+
+//Event Handlers extensions
+( function ( $, undefined ) {
+    
+    $.tryFindFunctionByName = function ( input ) {
+        /// <signature>
+        /// <summary>try to find (in the window root object) a function by its name.
+        ///</summary>
+        /// <param name="input" type="String">Name of the function to find.</param>
+        /// <returns type="Function">Returns the found function. Returns null otherwise.</returns>
+        /// </signature>
+        try {
+            if ( $.isNullOrUndefinedOrEmpty( input ) ) {
+                return null;
+            }
+
+            if ( $.isNotString( input ) ) {
+                return null;
+            }
+
+            // check if the function exist in the root object
+            var foundFunction = window[input];
+            if ( $.isFunction( foundFunction ) ) {
+                return foundFunction;
+            }
+
+            // function is defined in a namespace
+            var namespaces = input.split( "." );
+            if ( $.isNullOrUndefinedOrEmpty( namespaces ) ) {
+                return null;
+            }
+
+            var functionName = namespaces[namespaces.length - 1];
+            var parentObject = window;
+            for ( var i = 0; i < namespaces.length - 1; i++ ) {
+                var namespace = namespaces[i];
+                parentObject = parentObject[namespace];
+            }
+
+            foundFunction = parentObject[functionName];
+            if ( $.isFunction( foundFunction ) ) {
+                return foundFunction;
+            }
+
+            $.logError( {
+                functionName: "tryFindFunctionByName",
+                message: "Cannot find function named : '" + input + "'",
+                info: "Check case sensitivity and namespaces"
+            } );
+            return null;
+
+        } catch ( e ) {
+            $.logException( e );
+            return null;
+        }
+    };
+
+} )( jQuery );
+// end Event Handlers extensions
+
+
+
+
+
 //non-chained extensions
 ( function ( $, undefined ) {
     

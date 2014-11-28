@@ -701,6 +701,52 @@
                         } );
 
 
+    QUnit.isolatedTest( moduleName, "jQuery v1.11.1 object must not have a method called $.tryFindFunctionByName()",
+                 getEmptyFrameContentWithJS( ["http://code.jquery.com/jquery-1.11.1.min.js"] ),
+                 "jQuery", function ( assert, isolatedWindow ) {
+                     //Arrange
+                     var testObject;
+
+                     //Act
+                     testObject = isolatedWindow.$.tryFindFunctionByName;
+
+                     //Assert
+                     var successMessage = "jQuery library does not contain $.tryFindFunctionByName()";
+                     var errorMessage = "jQuery library contains $.tryFindFunctionByName()";
+                     if ( testObject !== undefined && testObject.toString ) {
+                         errorMessage += " jQuery.tryFindFunctionByName = '" + testObject.toString() + "'";
+                     }
+                     var msg = successMessage;
+                     if ( testObject !== undefined ) {
+                         msg = errorMessage;
+                     }
+                     assert.deepEqual( testObject, undefined, msg );
+
+                 } );
+
+    QUnit.isolatedTest( moduleName, "jQuery v2.1.1 object must not have a method called $.tryFindFunctionByName()",
+                        getEmptyFrameContentWithJS( ["http://code.jquery.com/jquery-2.1.1.min.js"] ),
+                        "jQuery", function ( assert, isolatedWindow ) {
+                            //Arrange
+                            var testObject;
+
+                            //Act
+                            testObject = isolatedWindow.$.tryFindFunctionByName;
+
+                            //Assert
+                            var successMessage = "jQuery library does not contain $.tryFindFunctionByName()";
+                            var errorMessage = "jQuery library contains $.tryFindFunctionByName()";
+                            if ( testObject !== undefined && testObject.toString ) {
+                                errorMessage += " jQuery.tryFindFunctionByName = '" + testObject.toString() + "'";
+                            }
+                            var msg = successMessage;
+                            if ( testObject !== undefined ) {
+                                msg = errorMessage;
+                            }
+                            assert.deepEqual( testObject, undefined, msg );
+
+                        } );
+
 } )( QUnit );
 
 
